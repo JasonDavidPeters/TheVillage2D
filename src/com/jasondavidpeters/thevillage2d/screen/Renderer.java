@@ -171,6 +171,21 @@ public class Renderer extends Canvas {
 		}
 	}
 	
+	public void renderGameObject(int xp, int yp, Sprite sprite) {
+		yp-=yOffset;
+		xp-=xOffset;
+		for (int y = 0; y < sprite.getHeight(); y++) {
+			int yy = y + yp;
+			for (int x  = 0; x < sprite.getWidth(); x++) { 
+				int xx = x + xp;
+				if (xx < 0 || xx > WIDTH || yy < 0 || yy >=HEIGHT)break;
+				int col = sprite.getPixels()[x+y*sprite.getWidth()];
+				if (col != alpha)
+					pixels[xx+yy*WIDTH] =col;
+			}
+		}
+		
+	}
 	public int getPixelWidth() {
 		return WIDTH * SCALE;
 	}
@@ -189,4 +204,5 @@ public class Renderer extends Canvas {
 	public JFrame getFrame() {
 		return frame;
 	}
+
 }

@@ -32,6 +32,18 @@ public class Npc extends Entity {
 			if (level.getTile((int) xx, (int) yy).isSolid())
 				return true;
 		}
+		for (int c = 0; c < 4; c++) {
+			double xx = ((xp + xa) - c % 2 + 8) / 16; // when c is 3 and 4
+			double yy = ((yp + ya) - c / 2 + +11) / 16;
+			if (c == 0) {
+				xx = Math.floor(xx);
+				yy = Math.floor(yy);
+			}
+//			System.out.println(xx + " " + yy + " " + level.getTile((int) xx, (int) yy) + " " + c);
+			if (level.getGameObject((int) xx, (int) yy) != null)
+			if (level.getGameObject((int) xx, (int) yy).isSolid())
+				return true;
+		}
 		return false;
 	}
 

@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Random;
 
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
 
 public class Level {
 
 	protected int[] pixels;
 	protected int width, height;
+	
 	protected List<Tile> tileList = new ArrayList<Tile>();
 	protected List<Entity> entities = new ArrayList<Entity>();
+	protected List <GameObject> gameObjects = new ArrayList<GameObject>();
+	
 	protected Random random = new Random();
 	protected String levelFile;
 	protected Entity player;
@@ -45,11 +49,13 @@ public class Level {
 				t.render(x, y, renderer);
 			}
 		}
+		for (int i = 0; i < gameObjects.size(); i++) gameObjects.get(i).render(renderer);
 		for (int i = 0; i < entities.size(); i++) entities.get(i).render(renderer);
 	}
 	public void tick() {
 		for (int i = 0; i < entities.size(); i++) entities.get(i).tick();
 		for (int i = 0; i < tileList.size(); i++) tileList.get(i).tick();
+		for (int i = 0; i < gameObjects.size(); i++) gameObjects.get(i).tick();
 	}
 	
 	protected void add(Object object) {
@@ -57,6 +63,8 @@ public class Level {
 		tileList.add((Tile)object);
 		if (object instanceof Entity)
 		entities.add((Entity)object);
+		if (object instanceof GameObject)
+		gameObjects.add((GameObject)object);
 	}
 	public Tile getTile(int x, int y) {
 		if (x < 0 || y < 0)return Tile.VOID;
@@ -75,5 +83,12 @@ public class Level {
 	}
 	public int[] getPixels() { 
 		return this.pixels;
+	}
+	public GameObject getGameObject(int x, int y) {
+		for (GameObject o: gameObjects) {
+			if (x== o.getX()/16 && y == o.getY()/16)
+				return o;
+		}
+		return null;
 	}
 }

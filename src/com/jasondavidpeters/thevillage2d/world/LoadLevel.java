@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
 
 public class LoadLevel extends Level {
@@ -26,6 +27,7 @@ public class LoadLevel extends Level {
 			e.printStackTrace();
 		}
 		add(Tile.WATER);
+		add(GameObject.GAMEOBJECT_STONE);
 	}
 
 }

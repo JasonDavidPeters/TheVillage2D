@@ -53,8 +53,6 @@ public class Button extends Component {
 	protected void checkClicked() {
 		if (!isDisabled()) {
 			if (mouse.getMouseB() == 1) {
-				System.out.println(getAbsoluteX() + " " + getAbsoluteY() + " " + mouse.getMouseB() + " "
-						+ mouse.getMouseX() + " " + mouse.getMouseY());
 				if (mouse.getMouseX() >= getAbsoluteX() - width / 2 && mouse.getMouseX() <= getAbsoluteX() + width / 2
 						&& mouse.getMouseY() >= getAbsoluteY() - height && mouse.getMouseY() <= getAbsoluteY()) {
 					isClicked=true;
