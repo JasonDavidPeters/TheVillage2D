@@ -130,15 +130,22 @@ public class Renderer extends Canvas {
 		}
 
 	}
+	public void renderComponent(int xp, int yp, int width, int height, Sprite sprite) {
+		for (int y = 0; y < sprite.getHeight(); y++) {
+			if (y > height) continue;
+			int yy = y + yp;
+			for (int x = 0; x < sprite.getWidth(); x++) {
+				if (x > width) continue;
+				int xx = x + xp;
+				if ( xx < 0 || xx >= WIDTH  || yy < 0 || yy >=HEIGHT) break;
+				int col = sprite.getPixels()[x+y * sprite.getWidth()];
+				if (col != alpha)
+				pixels[xx+yy*WIDTH] = col;
+			}
+		}
+	}
 
 	public void renderComponent(int xp, int yp, int width, int height, int col, boolean filled) {
-		/*
-		 * Render a rectangle
-		 */
-		//xp = 20
-		// yp = 20
-		// adjust the width to avoid warping
-		// if the xp + width > = WIDTH  width= WIDTH - (xp + width )
 		if (xp + width >= WIDTH) width=WIDTH;
 		if (yp + height >= HEIGHT) height=HEIGHT;
 		if (!filled) {
@@ -154,7 +161,7 @@ public class Renderer extends Canvas {
 			}
 		}
 		if (filled) {
-			System.out.println(xp + " " + yp);
+//			System.out.println(xp + " " + yp);
 			for (int y = yp; y < yp + height; y++) {
 				for (int x = xp; x < xp + width; x++) {
 					if (x < 0 || x >=WIDTH || y < 0 || y>=HEIGHT) break;

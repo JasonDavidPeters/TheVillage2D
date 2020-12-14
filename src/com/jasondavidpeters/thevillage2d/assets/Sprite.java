@@ -7,7 +7,10 @@ public class Sprite {
 	 * idea: the animated sprite could be an array that moves position
 	 * every x amount of seconds
 	 */
+	// UI
+	public static Sprite INVENTORY_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 0, 0, 16, 16, 0);
 	
+	// Tiles
 	public static Sprite GRASS = new Sprite(Spritesheet.WORLD_TILES, 0, 0, 16, 16,0);
 	public static Sprite VOID = new Sprite(Spritesheet.WORLD_TILES, 2, 0, 16, 16, 0);
 	public static Sprite DIRT_PAVEMENT = new Sprite(Spritesheet.WORLD_TILES, 3, 0, 16, 16, 0);

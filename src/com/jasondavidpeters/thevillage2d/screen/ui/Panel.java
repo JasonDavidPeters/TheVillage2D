@@ -29,11 +29,15 @@ public class Panel extends Component {
 	/* 
 	 * Will contain a list of components
 	 */
-	
+	public void tick() {
+		for (Component c: components)
+			c.tick();
+	}
 	public void render(Renderer renderer) {
 		renderer.renderComponent(x, y, width, height, color, false);
 		for (Component c: components)
-			c.render(renderer);
+			if (c.getToRender())
+				c.render(renderer);
 	}
 	
 

@@ -21,12 +21,13 @@ public class Level {
 		this.width=width;
 		this.height=height;
 		pixels=new int[width * height];
-		player = new Player(0,0);
-		add(player);
 	}
 	public Level(String levelFile) {
 		this.levelFile=levelFile;
-		player = new Player(0,0);
+	}
+	
+	public void addPlayer(Player player) {
+		this.player=player;
 		player.init(this);
 		add(player);
 	}

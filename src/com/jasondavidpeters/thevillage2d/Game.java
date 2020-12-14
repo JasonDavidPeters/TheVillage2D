@@ -1,10 +1,12 @@
 package com.jasondavidpeters.thevillage2d;
 
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
+import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.LoadLevel;
+import com.jasondavidpeters.thevillage2d.world.Player;
 
 public class Game implements Runnable {
 
@@ -15,6 +17,7 @@ public class Game implements Runnable {
 	private Renderer renderer;
 	private Level level;
 	private Keyboard keyboard;
+	private Mouse mouse;
 	public static UIManager UIMANAGER = new UIManager();
 	public static final String GAME_TITLE = "The Village 2D";
 	
@@ -26,6 +29,7 @@ public class Game implements Runnable {
 	
 	public void tick() {
 		level.tick();
+		UIMANAGER.tick(); // in case of buttons / interactive UI
 	}
 	public void render() {
 		renderer.render();
@@ -35,9 +39,12 @@ public class Game implements Runnable {
 	
 	public void run() {
 		keyboard = new Keyboard();
+		mouse = new Mouse();
 		renderer = new Renderer();
 		renderer.addKeyListener(keyboard);
+		renderer.addMouseListener(mouse);
 		level = new LoadLevel("/levels/spawn.png");
+		level.addPlayer(new Player(0,0,mouse));
 		long before = System.nanoTime();
 		double delta = 0.0;
 		double ns = 1000000000.0 / 60;

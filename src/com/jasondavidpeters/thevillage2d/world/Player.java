@@ -3,8 +3,10 @@ package com.jasondavidpeters.thevillage2d.world;
 import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
+import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.screen.ui.Button;
+import com.jasondavidpeters.thevillage2d.screen.ui.InventoryButton;
 import com.jasondavidpeters.thevillage2d.screen.ui.Panel;
 
 public class Player extends Npc {
@@ -14,9 +16,13 @@ public class Player extends Npc {
 	 * Get keyboard input and check for directional input
 	 */
 	private int cycle;
+	private Mouse mouse;
+	
+	private boolean inventoryOpen;
 
-	public Player(int x, int y) {
+	public Player(int x, int y, Mouse mouse) {
 		super(x,y);
+		this.mouse=mouse;
 		sprite = Sprite.PLAYER_FORWARD[0];
 		width=9;
 		height=15;
@@ -25,16 +31,17 @@ public class Player extends Npc {
 	}
 	
 	private void initaliseUI() { 
-		Panel gamePanel = new Panel(Renderer.WIDTH-41, 125, 40, Renderer.HEIGHT-126,0xFF0000);
-		gamePanel.add(new Button("test", 0, 0, 15, 15));
-		gamePanel.add(new Button("test", 15, 0, 15, 15, 0xFF0F00));
-		gamePanel.add(new Button("test", 30, 0, 15, 15, 0x0F0F0f));
-		Game.UIMANAGER.add(gamePanel);
+		Game.UIMANAGER.drawInitialUI(this);
 	}
 
 	public void render(Renderer renderer) {
 		renderer.setOffsets((int)x-Renderer.WIDTH/2, (int)y-Renderer.HEIGHT/2);
 		renderer.renderPlayer((int)x, (int)y, this);
+		if (inventoryOpen) 
+			Game.UIMANAGER.getComponent("inventory_panel").setToRender(true);
+		else
+			Game.UIMANAGER.getComponent("inventory_panel").setToRender(false);
+			 // render inventory
 	}
 
 	public void tick() {
@@ -51,8 +58,8 @@ public class Player extends Npc {
 			xa = -1*speed;
 		if (Keyboard.right)
 			xa = 1*speed;
-		
 //		System.out.println(xa);
+//		System.out.println(mouse);
 		if (xa < 0 || xa > 0 || ya < 0 || ya > 0) {
 			walking=true;
 			if (xa < 0 || xa > 0)
@@ -106,6 +113,16 @@ public class Player extends Npc {
 		default:
 			break;
 		}
+	}
+	public void setInventoryOpen(boolean inventoryOpen) {
+		this.inventoryOpen=inventoryOpen;
+	}
+	public Mouse getMouse() { 
+		return mouse;
+	}
+
+	public boolean getInventoryOpen() {
+		return inventoryOpen;
 	}
 
 }
