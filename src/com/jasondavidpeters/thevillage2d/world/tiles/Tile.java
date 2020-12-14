@@ -29,7 +29,7 @@ public class Tile {
 	public void tick() {
 	}
 	
-	protected boolean isSolid() {
+	public boolean isSolid() {
 		return false;
 	}
 	

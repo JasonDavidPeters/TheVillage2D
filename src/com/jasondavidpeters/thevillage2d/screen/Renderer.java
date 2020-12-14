@@ -29,9 +29,10 @@ public class Renderer extends Canvas {
 
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+	private JFrame frame;
 
 	public Renderer() {
-		JFrame frame = new JFrame(Game.GAME_TITLE);
+		frame = new JFrame(Game.GAME_TITLE);
 		frame.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		frame.add(this);
 		frame.pack();
@@ -110,30 +111,75 @@ public class Renderer extends Canvas {
 
 	}
 
-	public void renderPlayer(int xa, int ya,int xOffset, int yOffset, Player player) {
-		setOffsets(xOffset,yOffset);
-		xa-=xOffset;
-		ya-=yOffset;
+	public void renderPlayer(int xa, int ya, Player player) {
+		xa -= xOffset;
+		ya -= yOffset;
 		for (int y = 0; y < player.getSprite().getHeight(); y++) {
 			int yy = y + ya;
-			int ny = (-y+player.getSprite().getHeight())-1;
+			int ny = (-y + player.getSprite().getHeight()) - 1;
 			for (int x = 0; x < player.getSprite().getWidth(); x++) {
 				int xx = x + xa;
-				int nx = (-x+player.getSprite().getWidth())-1;
+				int nx = (-x + player.getSprite().getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
-				int col = player.getSprite().getPixels()[(player.getSprite().getFlip() != 1 ? x : nx) + (player.getSprite().getFlip() != 2 ? y : ny)* player.getSprite().getWidth()];
+				int col = player.getSprite().getPixels()[(player.getSprite().getFlip() != 1 ? x : nx)
+						+ (player.getSprite().getFlip() != 2 ? y : ny) * player.getSprite().getWidth()];
 				if (col != alpha)
 					pixels[xx + yy * WIDTH] = col;
 			}
 		}
 
 	}
+
+	public void renderComponent(int xp, int yp, int width, int height, int col, boolean filled) {
+		/*
+		 * Render a rectangle
+		 */
+		//xp = 20
+		// yp = 20
+		// adjust the width to avoid warping
+		// if the xp + width > = WIDTH  width= WIDTH - (xp + width )
+		if (xp + width >= WIDTH) width=WIDTH;
+		if (yp + height >= HEIGHT) height=HEIGHT;
+		if (!filled) {
+			for (int y = yp; y < yp + height; y++) {
+				if (y < 0 || y >= HEIGHT) break;
+				pixels[(xp + y * WIDTH)] = col;
+				pixels[((xp+width) + y * WIDTH)] = col;
+			}
+			for (int x= xp; x<= xp+ width; x++) {
+				if (x < 0 || x>= WIDTH) break;
+				pixels[(x+yp*WIDTH)] = col;
+				pixels[((x+(yp+height)*WIDTH))] = col;
+			}
+		}
+		if (filled) {
+			System.out.println(xp + " " + yp);
+			for (int y = yp; y < yp + height; y++) {
+				for (int x = xp; x < xp + width; x++) {
+					if (x < 0 || x >=WIDTH || y < 0 || y>=HEIGHT) break;
+					pixels[x + y * WIDTH] = col;
+				}
+			}
+		}
+	}
 	
+	public int getPixelWidth() {
+		return WIDTH * SCALE;
+	}
+	public int getPixelHeight() { 
+		return HEIGHT * SCALE;
+	}
+
 	public int getYoffset() {
 		return yOffset;
 	}
+
 	public int getXoffset() {
 		return xOffset;
+	}
+
+	public JFrame getFrame() {
+		return frame;
 	}
 }

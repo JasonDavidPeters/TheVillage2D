@@ -7,5 +7,9 @@ public class WoodenPlankTile extends Tile {
 	public WoodenPlankTile(int x, int y, Sprite sprite) {
 		super(x,y,sprite);
 	}
+	
+	public boolean isSolid() {
+		return true;
+	}
 
 }

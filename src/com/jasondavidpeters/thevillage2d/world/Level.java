@@ -15,7 +15,7 @@ public class Level {
 	protected List<Entity> entities = new ArrayList<Entity>();
 	protected Random random = new Random();
 	protected String levelFile;
-	protected Player player;
+	protected Entity player;
 	
 	public Level(int width, int height) {
 		this.width=width;
@@ -27,6 +27,7 @@ public class Level {
 	public Level(String levelFile) {
 		this.levelFile=levelFile;
 		player = new Player(0,0);
+		player.init(this);
 		add(player);
 	}
 	

@@ -4,9 +4,10 @@ import com.jasondavidpeters.thevillage2d.screen.Renderer;
 
 public class Entity {
 	
-	protected int x, y;
+	protected double x, y;
+	protected Level level;
 	
-	public Entity(int x, int y) {
+	public Entity(double x, double y) {
 		this.x=x;
 		this.y=y;
 	}
@@ -14,15 +15,19 @@ public class Entity {
 	public void render(Renderer renderer) {
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
 	public void tick() {
 		
+	}
+	
+	public void init(Level level) {
+		this.level=level;
 	}
 
 }

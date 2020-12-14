@@ -2,6 +2,7 @@ package com.jasondavidpeters.thevillage2d;
 
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.LoadLevel;
 
@@ -14,7 +15,7 @@ public class Game implements Runnable {
 	private Renderer renderer;
 	private Level level;
 	private Keyboard keyboard;
-	private int x, y;
+	public static UIManager UIMANAGER = new UIManager();
 	public static final String GAME_TITLE = "The Village 2D";
 	
 	public static void main(String[] args) {
@@ -29,6 +30,7 @@ public class Game implements Runnable {
 	public void render() {
 		renderer.render();
 		level.render(renderer);
+		UIMANAGER.render(renderer);
 	}
 	
 	public void run() {
@@ -50,7 +52,8 @@ public class Game implements Runnable {
 				tick();
 			}
 			if (System.currentTimeMillis() - timer >= 1000) {
-				System.out.println("ticks: " + ticks + " frames: " + frames);
+//				System.out.println("ticks: " + ticks + " frames: " + frames);
+				renderer.getFrame().setTitle(GAME_TITLE + " " + "ticks: " + ticks + " frames: " + frames);
 				timer=System.currentTimeMillis();
 				ticks=0;
 				frames=0;
