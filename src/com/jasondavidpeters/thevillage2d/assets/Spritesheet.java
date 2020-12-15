@@ -11,6 +11,7 @@ public class Spritesheet {
 	public static Spritesheet PLAYERSHEET = new Spritesheet("/spritesheets/player/playersheet.png");
 	public static Spritesheet UIBUTTONS = new Spritesheet("/spritesheets/ui/uibuttons.png");
 	public static Spritesheet ORES = new Spritesheet("/spritesheets/gameobjects/ores.png");
+	public static Spritesheet CAVES = new Spritesheet("/spritesheets/gameobjects/cave.png");
 	
 	private int[] pixels;
 	private int width, height;

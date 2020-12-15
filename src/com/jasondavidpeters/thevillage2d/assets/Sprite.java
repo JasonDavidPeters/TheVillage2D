@@ -12,6 +12,7 @@ public class Sprite {
 	
 	//Game Objects
 	public static Sprite STONEORE = new Sprite(Spritesheet.ORES, 0, 0, 16, 16,0);
+	public static Sprite CAVEENTRANCE = new Sprite(Spritesheet.CAVES, 0, 0, 32, 32, 0);
 	// Tiles
 	public static Sprite GRASS = new Sprite(Spritesheet.WORLD_TILES, 0, 0, 16, 16,0);
 	public static Sprite VOID = new Sprite(Spritesheet.WORLD_TILES, 2, 0, 16, 16, 0);

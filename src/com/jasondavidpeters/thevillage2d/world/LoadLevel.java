@@ -28,6 +28,7 @@ public class LoadLevel extends Level {
 		}
 		add(Tile.WATER);
 		add(GameObject.GAMEOBJECT_STONE);
+		add(GameObject.GAMEOBJECT_CAVEENTRANCE);
 	}
 
 }

@@ -186,6 +186,24 @@ public class Renderer extends Canvas {
 		}
 		
 	}
+	public void drawRectangle(int xp, int yp, int width, int height) {
+		xp-=xOffset;
+		yp-=yOffset;
+		int col = 0xFF0000;
+		for (int y = yp; y < yp + height; y++) {
+			if (xp < 0 || xp > WIDTH || y < 0 || y > WIDTH || xp+y < 0 || xp +y >= WIDTH) break;
+			pixels[(xp + y * WIDTH)] = col;
+			if ((((xp+width) + y) < 0) || ((xp+width) + y >= WIDTH))break;
+			pixels[((xp+width) + y * WIDTH)] = col;
+		}
+		for (int x= xp; x<= xp+ width; x++) {
+			if (x+yp< 0 || x+yp>= WIDTH || x < 0 || yp < 0 || x >= WIDTH || yp >= WIDTH) break;
+			pixels[(x+yp*WIDTH)] = col;
+			if (x+(yp+height) < 0 || (x+(yp+height) >=WIDTH)) break;
+			pixels[((x+(yp+height)*WIDTH))] = col;
+		}
+		
+	}
 	public int getPixelWidth() {
 		return WIDTH * SCALE;
 	}
@@ -204,5 +222,6 @@ public class Renderer extends Canvas {
 	public JFrame getFrame() {
 		return frame;
 	}
+
 
 }

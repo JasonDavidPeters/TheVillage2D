@@ -6,6 +6,7 @@ import com.jasondavidpeters.thevillage2d.screen.Renderer;
 public class GameObject {
 
 	public static GameObject GAMEOBJECT_STONE = new Stone(2, 2, Sprite.STONEORE);
+	public static GameObject GAMEOBJECT_CAVEENTRANCE = new CaveEntrance(5,5,Sprite.CAVEENTRANCE);
 
 	protected int x, y;
 	protected Sprite sprite;
@@ -26,6 +27,9 @@ public class GameObject {
 
 	public void tick() {
 
+	}
+	public Sprite getSprite() {
+		return sprite;
 	}
 
 	public int getX() {

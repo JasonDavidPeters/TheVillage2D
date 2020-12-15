@@ -4,6 +4,7 @@ import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
+import com.jasondavidpeters.thevillage2d.util.Debug;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.LoadLevel;
 import com.jasondavidpeters.thevillage2d.world.Player;
@@ -20,6 +21,7 @@ public class Game implements Runnable {
 	private Mouse mouse;
 	public static UIManager UIMANAGER = new UIManager();
 	public static final String GAME_TITLE = "The Village 2D";
+	private Debug debug;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -43,6 +45,7 @@ public class Game implements Runnable {
 		renderer = new Renderer();
 		renderer.addKeyListener(keyboard);
 		renderer.addMouseListener(mouse);
+		Debug.r=renderer;
 		level = new LoadLevel("/levels/spawn.png");
 		level.addPlayer(new Player(0,0,mouse));
 		long before = System.nanoTime();

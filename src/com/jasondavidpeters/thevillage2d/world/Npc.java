@@ -1,6 +1,10 @@
 package com.jasondavidpeters.thevillage2d.world;
 
+import java.util.ArrayList;
+
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
+import com.jasondavidpeters.thevillage2d.util.Debug;
+import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 
 public class Npc extends Entity {
 
@@ -20,7 +24,7 @@ public class Npc extends Entity {
 		super(x, y);
 	}
 
-	protected boolean collision(double xp, double yp, double xa, double ya, int npcWidth, int npcHeight) {
+	protected boolean tileCollision(double xp, double yp, double xa, double ya, int npcWidth, int npcHeight) {
 		for (int c = 0; c < 4; c++) {
 			double xx = ((xp + xa) - c % 2 + npcWidth) / 16; // when c is 3 and 4
 			double yy = ((yp + ya) - c / 2 + npcHeight) / 16;
@@ -32,18 +36,6 @@ public class Npc extends Entity {
 			if (level.getTile((int) xx, (int) yy).isSolid())
 				return true;
 		}
-		for (int c = 0; c < 4; c++) {
-			double xx = ((xp + xa) - c % 2 + 8) / 16; // when c is 3 and 4
-			double yy = ((yp + ya) - c / 2 + +11) / 16;
-			if (c == 0) {
-				xx = Math.floor(xx);
-				yy = Math.floor(yy);
-			}
-//			System.out.println(xx + " " + yy + " " + level.getTile((int) xx, (int) yy) + " " + c);
-			if (level.getGameObject((int) xx, (int) yy) != null)
-			if (level.getGameObject((int) xx, (int) yy).isSolid())
-				return true;
-		}
 		return false;
 	}
 
@@ -51,8 +43,39 @@ public class Npc extends Entity {
 		return +n;
 	}
 
+	protected double getDistanceFromPlayer(double oX, double oY, double pX, double pY) {
+		double distance = Math.sqrt((pY - oY) * (pY - oY) + (pX - oX) * (pX - oX));
+		return distance;
+	}
+
+	protected boolean gameObjectCollision(double xp, double yp, double xa, double ya, int npcWidth, int npcHeight) {
+		/*
+		 * loop through game objects and get the middle of the game object if the middle
+		 * + width /2 && middle + height/2 is equal to the desired position then the
+		 * player is colliding
+		 */
+		ArrayList<GameObject> gameObjects = (ArrayList<GameObject>) level.gameObjects;
+
+		// find multiples of 16 (tile size) and multiply by half
+		for (GameObject o : gameObjects) {
+			if (o.isSolid()) {
+				double middleX = o.getX() + o.getSprite().getWidth() / 4;
+				double middleY = o.getY() + o.getSprite().getHeight() / 8;
+
+				double radius = ((o.getSprite().getWidth()) / 2);
+//				Debug.drawRect((int) middleX, (int) middleY, (int) radius, (int) radius);
+				if (getDistanceFromPlayer(middleX, middleY, (xp + xa), (yp + ya)) < radius) {
+					return true;
+
+				}
+			}
+		}
+		return false;
+
+	}
+
 	protected void move(double xa, double ya) {
-		if (!collision(x, y, xa, ya, width, height)) {
+		if (!tileCollision(x, y, xa, ya, width, height) && (!gameObjectCollision(x, y, xa, ya, width, height))) {
 			if (ya < 0) {
 				dir = 0;
 			}
