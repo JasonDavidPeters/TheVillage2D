@@ -11,8 +11,10 @@ import javax.swing.JFrame;
 
 import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
+import com.jasondavidpeters.thevillage2d.screen.ui.Font;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.Player;
+import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
 
 public class Renderer extends Canvas {
@@ -24,8 +26,8 @@ public class Renderer extends Canvas {
 
 	private int alpha = 0xffff00ff;
 
-	private int xOffset;
-	private int yOffset;
+	private static int xOffset;
+	private static int yOffset;
 
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -49,6 +51,7 @@ public class Renderer extends Canvas {
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
+//		g.setFont(new Font("Arial", 120, 0));
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		clear();
 		bs.show();
@@ -72,8 +75,51 @@ public class Renderer extends Canvas {
 				int xx = xa + x;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
-				pixels[xx + yy * WIDTH] = sprite.getPixels()[(x) + (y) * sprite.getWidth()];
+				int col = sprite.getPixels()[(x) + (y) * sprite.getWidth()];
+				if (col != alpha) {
+					sprite.setPixel((x) + (y) * sprite.getWidth(), 0xFF0000); // change colour of sprite
+					pixels[xx + yy * WIDTH] = col;
+				}
 			}
+		}
+	}
+	
+	public void renderText(int xp, int yp, Sprite sprite, int colour, boolean fixed) {
+		if (!fixed) {
+			xp-=xOffset;
+			yp-=yOffset;
+		}
+		for (int y = 0; y < sprite.getHeight(); y++) {
+			int ya = y + yp;
+			for (int x = 0; x < sprite.getWidth(); x++) {
+				int xa = x + xp;
+				if (xa < 0 || xa >= WIDTH || ya < 0 || ya >= HEIGHT) break;
+				int col = sprite.getPixels()[x + y * sprite.getWidth()];
+				if (col != alpha) {
+					sprite.setPixel((x) + (y) * sprite.getWidth(), colour);
+					pixels[xa+ya*WIDTH] = col;
+				}
+			}
+		}
+	}
+	
+	public void drawString(String text, int xp, int yp, int colour, boolean fixed) {
+		final int yPosition = yp;
+		final int xPosition = xp;
+		Sprite sprite;
+		for (int s = 0 ; s < text.length(); s++) {
+			yp=yPosition;
+			xp=xPosition;
+			char c = text.charAt(s);
+			int spacing = s * 6;
+			sprite = Font.GAME_FONT[Font.CHARACTERS.indexOf(c)];
+			if (c == 'g' || c == 'p') { // adjusting certain characters
+				yp += 3;
+			}
+			if (c == 'g') {
+				xp+=-1;
+			}
+			renderText(xp+spacing,yp, sprite, colour, fixed);
 		}
 	}
 
@@ -130,98 +176,115 @@ public class Renderer extends Canvas {
 		}
 
 	}
+
 	public void renderComponent(int xp, int yp, int width, int height, Sprite sprite) {
 		for (int y = 0; y < sprite.getHeight(); y++) {
-			if (y > height) continue;
+			if (y > height)
+				continue;
 			int yy = y + yp;
 			for (int x = 0; x < sprite.getWidth(); x++) {
-				if (x > width) continue;
+				if (x > width)
+					continue;
 				int xx = x + xp;
-				if ( xx < 0 || xx >= WIDTH  || yy < 0 || yy >=HEIGHT) break;
-				int col = sprite.getPixels()[x+y * sprite.getWidth()];
+				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
+					break;
+				int col = sprite.getPixels()[x + y * sprite.getWidth()];
 				if (col != alpha)
-				pixels[xx+yy*WIDTH] = col;
+					pixels[xx + yy * WIDTH] = col;
 			}
 		}
 	}
 
 	public void renderComponent(int xp, int yp, int width, int height, int col, boolean filled) {
-		if (xp + width >= WIDTH) width=WIDTH;
-		if (yp + height >= HEIGHT) height=HEIGHT;
+		if (xp + width >= WIDTH)
+			width = WIDTH;
+		if (yp + height >= HEIGHT)
+			height = HEIGHT;
 		if (!filled) {
 			for (int y = yp; y < yp + height; y++) {
-				if (y < 0 || y >= HEIGHT) break;
+				if (y < 0 || y >= HEIGHT)
+					break;
 				pixels[(xp + y * WIDTH)] = col;
-				pixels[((xp+width) + y * WIDTH)] = col;
+				pixels[((xp + width) + y * WIDTH)] = col;
 			}
-			for (int x= xp; x<= xp+ width; x++) {
-				if (x < 0 || x>= WIDTH) break;
-				pixels[(x+yp*WIDTH)] = col;
-				pixels[((x+(yp+height)*WIDTH))] = col;
+			for (int x = xp; x <= xp + width; x++) {
+				if (x < 0 || x >= WIDTH)
+					break;
+				pixels[(x + yp * WIDTH)] = col;
+				pixels[((x + (yp + height) * WIDTH))] = col;
 			}
 		}
 		if (filled) {
 //			System.out.println(xp + " " + yp);
 			for (int y = yp; y < yp + height; y++) {
 				for (int x = xp; x < xp + width; x++) {
-					if (x < 0 || x >=WIDTH || y < 0 || y>=HEIGHT) break;
+					if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+						break;
 					pixels[x + y * WIDTH] = col;
 				}
 			}
 		}
 	}
-	
-	public void renderGameObject(int xp, int yp, Sprite sprite) {
-		yp-=yOffset;
-		xp-=xOffset;
-		for (int y = 0; y < sprite.getHeight(); y++) {
+
+	public void renderGameObject(int xp, int yp, GameObject gameObject) {
+		yp -= yOffset;
+		xp -= xOffset;
+		gameObject.setScreenPosition(xp,yp);
+		for (int y = 0; y < gameObject.getSprite().getHeight(); y++) {
 			int yy = y + yp;
-			for (int x  = 0; x < sprite.getWidth(); x++) { 
+			for (int x = 0; x < gameObject.getSprite().getWidth(); x++) {
 				int xx = x + xp;
-				if (xx < 0 || xx > WIDTH || yy < 0 || yy >=HEIGHT)break;
-				int col = sprite.getPixels()[x+y*sprite.getWidth()];
+				if (xx < 0 || xx > WIDTH || yy < 0 || yy >= HEIGHT)
+					break;
+				int col = gameObject.getSprite().getPixels()[x + y * gameObject.getSprite().getWidth()];
 				if (col != alpha)
-					pixels[xx+yy*WIDTH] =col;
+					pixels[xx + yy * WIDTH] = col;
 			}
 		}
-		
+
 	}
+
 	public void drawRectangle(int xp, int yp, int width, int height) {
-		xp-=xOffset;
-		yp-=yOffset;
+		xp -= xOffset;
+		yp -= yOffset;
 		int col = 0xFF0000;
 		for (int y = yp; y < yp + height; y++) {
-			if (xp < 0 || xp > WIDTH || y < 0 || y > WIDTH || xp+y < 0 || xp +y >= WIDTH) break;
+			if (xp < 0 || xp > WIDTH || y < 0 || y > WIDTH || xp + y < 0 || xp + y >= WIDTH)
+				break;
 			pixels[(xp + y * WIDTH)] = col;
-			if ((((xp+width) + y) < 0) || ((xp+width) + y >= WIDTH))break;
-			pixels[((xp+width) + y * WIDTH)] = col;
+			if ((((xp + width) + y) < 0) || ((xp + width) + y >= WIDTH))
+				break;
+			pixels[((xp + width) + y * WIDTH)] = col;
 		}
-		for (int x= xp; x<= xp+ width; x++) {
-			if (x+yp< 0 || x+yp>= WIDTH || x < 0 || yp < 0 || x >= WIDTH || yp >= WIDTH) break;
-			pixels[(x+yp*WIDTH)] = col;
-			if (x+(yp+height) < 0 || (x+(yp+height) >=WIDTH)) break;
-			pixels[((x+(yp+height)*WIDTH))] = col;
+		for (int x = xp; x <= xp + width; x++) {
+			if (x + yp < 0 || x + yp >= WIDTH || x < 0 || yp < 0 || x >= WIDTH || yp >= WIDTH)
+				break;
+			pixels[(x + yp * WIDTH)] = col;
+			if (x + (yp + height) < 0 || (x + (yp + height) >= WIDTH))
+				break;
+			pixels[((x + (yp + height) * WIDTH))] = col;
 		}
-		
+
 	}
+
 	public int getPixelWidth() {
 		return WIDTH * SCALE;
 	}
-	public int getPixelHeight() { 
+
+	public int getPixelHeight() {
 		return HEIGHT * SCALE;
 	}
 
-	public int getYoffset() {
+	public static int getYoffset() {
 		return yOffset;
 	}
 
-	public int getXoffset() {
+	public static int getXoffset() {
 		return xOffset;
 	}
 
 	public JFrame getFrame() {
 		return frame;
 	}
-
 
 }

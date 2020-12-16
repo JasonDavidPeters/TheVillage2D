@@ -6,6 +6,7 @@ public class Entity {
 	
 	protected double x, y;
 	protected Level level;
+	protected String name;
 	
 	public Entity(double x, double y) {
 		this.x=x;

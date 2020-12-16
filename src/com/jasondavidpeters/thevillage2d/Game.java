@@ -3,6 +3,7 @@ package com.jasondavidpeters.thevillage2d;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.screen.ui.Font;
 import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
 import com.jasondavidpeters.thevillage2d.util.Debug;
 import com.jasondavidpeters.thevillage2d.world.Level;
@@ -22,6 +23,7 @@ public class Game implements Runnable {
 	public static UIManager UIMANAGER = new UIManager();
 	public static final String GAME_TITLE = "The Village 2D";
 	private Debug debug;
+	private Font font;
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -37,6 +39,8 @@ public class Game implements Runnable {
 		renderer.render();
 		level.render(renderer);
 		UIMANAGER.render(renderer);
+//		renderer.drawString("abcdefghijklmnop", 100, 70, 0xFF0000, true);
+		
 	}
 	
 	public void run() {
@@ -47,7 +51,8 @@ public class Game implements Runnable {
 		renderer.addMouseListener(mouse);
 		Debug.r=renderer;
 		level = new LoadLevel("/levels/spawn.png");
-		level.addPlayer(new Player(0,0,mouse));
+		level.addPlayer(new Player("Jason", 0,0,mouse));
+		font = new Font();
 		long before = System.nanoTime();
 		double delta = 0.0;
 		double ns = 1000000000.0 / 60;

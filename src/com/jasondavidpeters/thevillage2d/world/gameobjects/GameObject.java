@@ -10,6 +10,8 @@ public class GameObject {
 
 	protected int x, y;
 	protected Sprite sprite;
+	protected int life;
+	protected int screenPositionX, screenPositionY;
 
 	public GameObject(int x, int y, Sprite sprite) {
 		this.x = x * 16;
@@ -22,7 +24,7 @@ public class GameObject {
 	}
 
 	public void render(Renderer renderer) {
-		renderer.renderGameObject(x, y, sprite);
+		renderer.renderGameObject(x, y, this);
 	}
 
 	public void tick() {
@@ -38,5 +40,15 @@ public class GameObject {
 
 	public int getY() {
 		return y;
+	}
+	public int getScreenPositionX() {
+		return screenPositionX;
+	}
+	public int getScreenPositionY() {
+		return screenPositionY;
+	}
+	public void setScreenPosition(int x, int y) {
+		screenPositionX = x;
+		screenPositionY = y;
 	}
 }

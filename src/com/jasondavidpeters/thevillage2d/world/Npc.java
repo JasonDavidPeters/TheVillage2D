@@ -3,7 +3,7 @@ package com.jasondavidpeters.thevillage2d.world;
 import java.util.ArrayList;
 
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
-import com.jasondavidpeters.thevillage2d.util.Debug;
+import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 
 public class Npc extends Entity {
@@ -14,14 +14,20 @@ public class Npc extends Entity {
 	protected boolean walking;
 	protected int width, height;
 	protected double speed;
-
-	public Npc(int x, int y, Sprite sprite) {
+	
+	public Npc(String name, int x, int y, Sprite sprite) {
 		super(x, y);
 		this.sprite = sprite;
+		this.name=name;
 	}
 
-	public Npc(int x, int y) {
+	public Npc(String name, int x, int y) {
 		super(x, y);
+		this.name=name;
+	}
+	
+	public void render(Renderer r) {
+		r.drawString(name, (int)x-5, (int)y-12, 0xFF0000, false);
 	}
 
 	protected boolean tileCollision(double xp, double yp, double xa, double ya, int npcWidth, int npcHeight) {

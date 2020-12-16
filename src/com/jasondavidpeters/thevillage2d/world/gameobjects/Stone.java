@@ -12,5 +12,9 @@ public class Stone extends GameObject {
 	public boolean isSolid() { 
 		return true;
 	}
+	
+	public void tick() {
+		// get clicked
+	}
 
 }
