@@ -13,7 +13,7 @@ import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.ui.Font;
 import com.jasondavidpeters.thevillage2d.world.Level;
-import com.jasondavidpeters.thevillage2d.world.Player;
+import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
 
@@ -26,8 +26,8 @@ public class Renderer extends Canvas {
 
 	private int alpha = 0xffff00ff;
 
-	private static int xOffset;
-	private static int yOffset;
+	private int xOffset;
+	private int yOffset;
 
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -77,7 +77,6 @@ public class Renderer extends Canvas {
 					break;
 				int col = sprite.getPixels()[(x) + (y) * sprite.getWidth()];
 				if (col != alpha) {
-					sprite.setPixel((x) + (y) * sprite.getWidth(), 0xFF0000); // change colour of sprite
 					pixels[xx + yy * WIDTH] = col;
 				}
 			}
@@ -275,11 +274,11 @@ public class Renderer extends Canvas {
 		return HEIGHT * SCALE;
 	}
 
-	public static int getYoffset() {
+	public int getYoffset() {
 		return yOffset;
 	}
 
-	public static int getXoffset() {
+	public int getXoffset() {
 		return xOffset;
 	}
 

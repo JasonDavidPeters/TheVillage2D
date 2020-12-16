@@ -8,7 +8,7 @@ import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
 import com.jasondavidpeters.thevillage2d.util.Debug;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.LoadLevel;
-import com.jasondavidpeters.thevillage2d.world.Player;
+import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 
 public class Game implements Runnable {
 

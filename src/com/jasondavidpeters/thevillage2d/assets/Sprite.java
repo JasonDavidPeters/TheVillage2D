@@ -10,6 +10,8 @@ public class Sprite {
 	// UI
 	public static Sprite INVENTORY_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 0, 0, 16, 16, 0);
 
+	// Entities
+	public static Sprite GROUND_STONE_ENTITY = new Sprite(Spritesheet.ORES, 6, 0, 16, 16, 0);
 	// Game Objects
 	public static Sprite STONEORE = new Sprite(Spritesheet.ORES, 0, 0, 16, 16, 0);
 	public static Sprite CAVEENTRANCE = new Sprite(Spritesheet.CAVES, 0, 0, 32, 32, 0);

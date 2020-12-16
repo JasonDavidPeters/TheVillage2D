@@ -1,4 +1,4 @@
-package com.jasondavidpeters.thevillage2d.world;
+package com.jasondavidpeters.thevillage2d.world.entities.npc;
 
 import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
@@ -78,19 +78,28 @@ public class Player extends Npc {
 		if (mouse.getMouseB() == 1 && mouse.getMouseX() >= 0 && mouse.getMouseX() <= Renderer.WIDTH
 				&& mouse.getMouseY() >= 0 && mouse.getMouseY() <= Renderer.HEIGHT) {
 			for (GameObject gameObject : level.gameObjects) {
-				Debug.drawRect(gameObject.getX(), gameObject.getY(), gameObject.getSprite().getWidth(), gameObject.getSprite().getHeight());
-				// gameobject x + gameobject width
-				//gameobject y + gameobject height
-//				final int zeroPoint = Renderer.HEIGHT / 2;
-				
+//				Debug.drawRect(gameObject.getX(), gameObject.getY(), gameObject.getSprite().getWidth(),
+//						gameObject.getSprite().getHeight());
+
 				int mouseXo = mouse.getMouseX();// need to offset the mouse by the map coordinates
 				int mouseYo = mouse.getMouseY();
-				
+
 //				System.out.println("player x: " +(int) x + ", player y: " + (int)y + ", Mouse x: " + mouseXo + ", Gameobject x: " + gameObject.getScreenPositionX() + ", Mouse y: " + mouseYo + ", Gameobject y: " + gameObject.getScreenPositionY());
-				if ((mouseXo >= gameObject.getScreenPositionX() && mouseXo <= gameObject.getScreenPositionX() + gameObject.getSprite().getWidth()/2)
-						&& (mouseYo >= gameObject.getScreenPositionY() && mouseYo <= gameObject.getScreenPositionY() + gameObject.getSprite().getHeight()/2)) {
-					System.out.println("Clicking: " + gameObject);
-					mouse.reset();
+				if ((mouseXo >= gameObject.getScreenPositionX()
+						&& mouseXo <= gameObject.getScreenPositionX() + gameObject.getSprite().getWidth() / 2)
+						&& (mouseYo >= gameObject.getScreenPositionY() && mouseYo <= gameObject.getScreenPositionY()
+								+ gameObject.getSprite().getHeight() / 2)) {
+//					System.out.println();
+					if (!gameObject.canInteractFromFar()) {
+						double radius = ((gameObject.getSprite().getWidth()));
+						if (getDistanceFromPlayer(gameObject.getX(), gameObject.getY(), x, y) <= radius) {
+							gameObject.interact(this);
+//							mouse.reset();
+						}
+					} else {
+						// if the object can be clicked from any distance
+						mouse.reset();
+					}
 				}
 			}
 		}

@@ -1,9 +1,10 @@
-package com.jasondavidpeters.thevillage2d.world;
+package com.jasondavidpeters.thevillage2d.world.entities.npc;
 
 import java.util.ArrayList;
 
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.world.entities.Entity;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 
 public class Npc extends Entity {

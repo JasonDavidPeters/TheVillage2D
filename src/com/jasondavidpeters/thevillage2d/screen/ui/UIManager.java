@@ -6,7 +6,7 @@ import java.util.List;
 import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
-import com.jasondavidpeters.thevillage2d.world.Player;
+import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 
 public class UIManager {
 

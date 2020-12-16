@@ -1,12 +1,14 @@
-package com.jasondavidpeters.thevillage2d.world;
+package com.jasondavidpeters.thevillage2d.world.entities;
 
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.world.Level;
 
 public class Entity {
 	
 	protected double x, y;
 	protected Level level;
 	protected String name;
+	protected boolean isRemoved;
 	
 	public Entity(double x, double y) {
 		this.x=x;
@@ -21,6 +23,12 @@ public class Entity {
 	}
 	public double getY() {
 		return y;
+	}
+	public boolean isRemoved() {
+		return isRemoved;
+	}
+	public void setRemove(boolean isRemoved) {
+		this.isRemoved=isRemoved;
 	}
 
 	public void tick() {

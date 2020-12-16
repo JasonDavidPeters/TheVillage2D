@@ -2,7 +2,7 @@ package com.jasondavidpeters.thevillage2d.screen.ui;
 
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
-import com.jasondavidpeters.thevillage2d.world.Player;
+import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 
 public class InventoryButton extends Button {
 
