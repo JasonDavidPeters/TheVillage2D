@@ -10,8 +10,8 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.jasondavidpeters.thevillage2d.Game;
+import com.jasondavidpeters.thevillage2d.assets.Font;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
-import com.jasondavidpeters.thevillage2d.screen.ui.Font;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;

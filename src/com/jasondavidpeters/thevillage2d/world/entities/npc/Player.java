@@ -1,11 +1,14 @@
 package com.jasondavidpeters.thevillage2d.world.entities.npc;
 
 import com.jasondavidpeters.thevillage2d.Game;
+import com.jasondavidpeters.thevillage2d.assets.Animation;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
+import com.jasondavidpeters.thevillage2d.assets.Spritesheet;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
-import com.jasondavidpeters.thevillage2d.util.Debug;
+import com.jasondavidpeters.thevillage2d.world.gameitems.GameItem;
+import com.jasondavidpeters.thevillage2d.world.gameitems.StonePickaxe;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 
 public class Player extends Npc {
@@ -19,14 +22,18 @@ public class Player extends Npc {
 
 	private boolean inventoryOpen;
 
+	protected Animation animation;
+
 	public Player(String name, int x, int y, Mouse mouse) {
 		super(name, x, y);
 		this.mouse = mouse;
+		animation = new Animation(Spritesheet.ORES.subsheet(0, 0, 4 * 16, 16), 16, 16);
 		sprite = Sprite.PLAYER_FORWARD[0];
 		width = 9;
 		height = 15;
 		speed = .8;
 		initaliseUI();
+		equipment[0] = new StonePickaxe(equipmentHandler,Sprite.STONE_PICKAXE);
 	}
 
 	private void initaliseUI() {
@@ -42,6 +49,12 @@ public class Player extends Npc {
 		else
 			Game.UIMANAGER.getComponent("inventory_panel").setToRender(false);
 		// render inventory
+		
+		if (equipment != null && equipment.length >0) {
+			for (GameItem gItem: equipment)
+				if (gItem!=null)
+			gItem.render(this,renderer);
+		}
 	}
 
 	public void tick() {
@@ -94,6 +107,9 @@ public class Player extends Npc {
 						double radius = ((gameObject.getSprite().getWidth()));
 						if (getDistanceFromPlayer(gameObject.getX(), gameObject.getY(), x, y) <= radius) {
 							gameObject.interact(this);
+							//animation.start();
+							//if (animation.animSprite()!=null)
+							//sprite = animation.animSprite();
 //							mouse.reset();
 						}
 					} else {

@@ -12,6 +12,8 @@ public class Sprite {
 
 	// Entities
 	public static Sprite GROUND_STONE_ENTITY = new Sprite(Spritesheet.ORES, 6, 0, 16, 16, 0);
+	// Game Items
+	public static Sprite STONE_PICKAXE = new Sprite(Spritesheet.STONEPICKAXE, 0, 0, 8, 8, 0);
 	// Game Objects
 	public static Sprite STONEORE = new Sprite(Spritesheet.ORES, 0, 0, 16, 16, 0);
 	public static Sprite CAVEENTRANCE = new Sprite(Spritesheet.CAVES, 0, 0, 32, 32, 0);
@@ -101,8 +103,9 @@ public class Sprite {
 		 * Loop through the sheet
 		 */
 		int counter = 0;
-		Sprite[] sprites = new Sprite[((int) Math.ceil(sheet.getWidth() / width) * (int) Math.ceil(sheet.getWidth() / width))];
-		int[] pixels = new int[width * height];
+		Sprite[] sprites = new Sprite[(sheet.getWidth() / width) *(sheet.getHeight() / height)];
+		
+		int[] pixels = new int[width * height]; // each individual sprite pixels
 //		System.out.println("sheet height: " + sheet.getHeight() + " sheet width: " + sheet.getWidth() + " height: " + height + " width: " + width);
 		for (int y = 0; y < sheet.getHeight() / height; y++) {
 			for (int x = 0; x < sheet.getWidth() / width; x++) {

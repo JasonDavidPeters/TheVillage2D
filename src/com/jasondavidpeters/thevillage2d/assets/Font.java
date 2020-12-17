@@ -1,7 +1,5 @@
-package com.jasondavidpeters.thevillage2d.screen.ui;
+package com.jasondavidpeters.thevillage2d.assets;
 
-import com.jasondavidpeters.thevillage2d.assets.Sprite;
-import com.jasondavidpeters.thevillage2d.assets.Spritesheet;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 
 public class Font {

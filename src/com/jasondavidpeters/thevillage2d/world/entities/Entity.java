@@ -1,5 +1,6 @@
 package com.jasondavidpeters.thevillage2d.world.entities;
 
+import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.world.Level;
 
@@ -9,6 +10,7 @@ public class Entity {
 	protected Level level;
 	protected String name;
 	protected boolean isRemoved;
+	protected Sprite sprite;
 	
 	public Entity(double x, double y) {
 		this.x=x;
@@ -37,6 +39,9 @@ public class Entity {
 	
 	public void init(Level level) {
 		this.level=level;
+	}
+	public Sprite getSprite() {
+		return sprite;
 	}
 
 }

@@ -1,9 +1,9 @@
 package com.jasondavidpeters.thevillage2d;
 
+import com.jasondavidpeters.thevillage2d.assets.Font;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
-import com.jasondavidpeters.thevillage2d.screen.ui.Font;
 import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
 import com.jasondavidpeters.thevillage2d.util.Debug;
 import com.jasondavidpeters.thevillage2d.world.Level;

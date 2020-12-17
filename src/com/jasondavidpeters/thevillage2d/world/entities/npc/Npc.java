@@ -5,30 +5,33 @@ import java.util.ArrayList;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.world.entities.Entity;
+import com.jasondavidpeters.thevillage2d.world.entities.handlers.EquipmentHandler;
+import com.jasondavidpeters.thevillage2d.world.gameitems.GameItem;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 
 public class Npc extends Entity {
 
-	protected Sprite sprite;
 	protected int dir;
 	protected int anim;
 	protected boolean walking;
 	protected int width, height;
 	protected double speed;
-	
+	protected GameItem equipment[] = new GameItem[3];
+	protected EquipmentHandler equipmentHandler = new EquipmentHandler();
+
 	public Npc(String name, int x, int y, Sprite sprite) {
 		super(x, y);
 		this.sprite = sprite;
-		this.name=name;
+		this.name = name;
 	}
 
 	public Npc(String name, int x, int y) {
 		super(x, y);
-		this.name=name;
+		this.name = name;
 	}
-	
+
 	public void render(Renderer r) {
-		r.drawString(name, (int)x-5, (int)y-12, 0xFF0000, false);
+		r.drawString(name, (int) x - 5, (int) y - 12, 0xFF0000, false);
 	}
 
 	protected boolean tileCollision(double xp, double yp, double xa, double ya, int npcWidth, int npcHeight) {
@@ -103,10 +106,21 @@ public class Npc extends Entity {
 				y += abs(ya);
 				ya += -abs(ya);
 			}
+			if (equipment != null && equipment.length > 0) 
+				for (GameItem gItem : equipment)
+					if (gItem != null)
+						gItem.updatePosition((x/16), y / 16);
+			/*
+			 * TODO: fix speed of game items compared to the entity they're tied to
+			 */
 		} else {
 			xa = 0;
 			ya = 0;
 		}
+	}
+	
+	public int getDir() {
+		return dir;
 	}
 
 	public int getWidth() {
@@ -117,8 +131,8 @@ public class Npc extends Entity {
 		return height;
 	}
 
-	public Sprite getSprite() {
-		return sprite;
+	public double getSpeed() {
+		return speed;
 	}
 
 }
