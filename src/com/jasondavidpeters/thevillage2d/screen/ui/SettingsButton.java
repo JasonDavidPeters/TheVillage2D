@@ -4,9 +4,9 @@ import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 
-public class InventoryButton extends Button {
+public class SettingsButton extends Button {
 
-	public InventoryButton(String btnText, int x, int y, int width, int height, Sprite sprite, Player player) {
+	public SettingsButton(String btnText, int x, int y, int width, int height, Sprite sprite, Player player) {
 		super(btnText, x, y, width, height, sprite, player);
 	}
 
@@ -17,10 +17,9 @@ public class InventoryButton extends Button {
 				player.setInventoryOpen(false);
 				player.setEquipmentOpen(false);
 				player.setSettingsOpen(false);
-//				mouse.reset();
 				isClicked=false;
 			} else {
-				player.setInventoryOpen(true);
+				player.setSettingsOpen(true);
 				isClicked = false;
 			}
 		}

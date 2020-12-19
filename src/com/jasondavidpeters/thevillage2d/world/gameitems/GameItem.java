@@ -10,6 +10,12 @@ public class GameItem {
 	protected Sprite sprite;
 	protected double x, y;
 	protected EquipmentHandler equipmentHandler;
+	
+	public GameItem(double x, double y, Sprite sprite) {
+		this.x=x;
+		this.y=y;
+		this.sprite=sprite;
+	}
 
 	public GameItem(EquipmentHandler equipmentHandler, Sprite sprite) {
 		this.sprite = sprite;
@@ -55,6 +61,14 @@ public class GameItem {
 	}
 	public void updateY(double y) {
 		this.y=y;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getX() {
+		return x;
 	}
 
 }

@@ -11,7 +11,6 @@ import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 public class GameObject {
 
 	public static GameObject GAMEOBJECT_STONE = new Stone(2, 2, Sprite.STONEORE);
-	public static GameObject GAMEOBJECT_CAVEENTRANCE = new CaveEntrance(5,5,Sprite.CAVEENTRANCE);
 	
 	public static List<GameObject> RESPAWN_OBJECTS = new ArrayList<GameObject>(); // Objects that have been removed from level and are set to respawn
 

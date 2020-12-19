@@ -9,20 +9,35 @@ public class Sprite {
 	 */
 	// UI
 	public static Sprite INVENTORY_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 0, 0, 16, 16, 0);
+	public static Sprite EQUIPMENT_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 1, 0, 16, 16, 0);
+	public static Sprite SETTINGS_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 2, 0, 16, 16, 0);
 
 	// Entities
 	public static Sprite GROUND_STONE_ENTITY = new Sprite(Spritesheet.ORES, 6, 0, 16, 16, 0);
+	public static Sprite GROUND_COPPER_ENTITY = new Sprite(Spritesheet.ORES, 6, 1, 16, 16, 0);
+	public static Sprite GROUND_TIN_ENTITY = new Sprite(Spritesheet.ORES, 6, 2, 16, 16, 0);
 	// Game Items
 	public static Sprite STONE_PICKAXE = new Sprite(Spritesheet.STONEPICKAXE, 0, 0, 8, 8, 0);
 	// Game Objects
 	public static Sprite STONEORE = new Sprite(Spritesheet.ORES, 0, 0, 16, 16, 0);
+	public static Sprite COPPERORE = new Sprite(Spritesheet.ORES, 0, 1, 16, 16, 0);
+	public static Sprite TINORE = new Sprite(Spritesheet.ORES, 0, 2, 16, 16, 0);
 	public static Sprite CAVEENTRANCE = new Sprite(Spritesheet.CAVES, 0, 0, 32, 32, 0);
 	// Tiles
 	public static Sprite GRASS = new Sprite(Spritesheet.WORLD_TILES, 0, 0, 16, 16, 0);
 	public static Sprite VOID = new Sprite(Spritesheet.WORLD_TILES, 2, 0, 16, 16, 0);
 	public static Sprite DIRT_PAVEMENT = new Sprite(Spritesheet.WORLD_TILES, 3, 0, 16, 16, 0);
 	public static Sprite WOODEN_PLANK = new Sprite(Spritesheet.WORLD_TILES, 4, 0, 16, 16, 0);
-
+	
+	public static Sprite CAVE_FLOOR = new Sprite(Spritesheet.CAVE_TILES, 0, 0, 16, 16, 0);
+	public static Sprite CAVE_NORTH_WALL = new Sprite(Spritesheet.CAVE_TILES, 1, 0, 16, 16, 0);
+	public static Sprite CAVE_SOUTH_WALL = new Sprite(Spritesheet.CAVE_TILES, 1, 0, 16, 16, 2);
+	public static Sprite CAVE_TOPRIGHT_CORNER = new Sprite(Spritesheet.CAVE_TILES, 2, 0, 16, 16, 0);
+	public static Sprite CAVE_TOPLEFT_CORNER = new Sprite(Spritesheet.CAVE_TILES, 2, 0, 16, 16, 1);
+	public static Sprite CAVE_BOTTOMRIGHT_CORNER = new Sprite(Spritesheet.CAVE_TILES, 2, 0, 16, 16, 2);
+	public static Sprite CAVE_BOTTOMLEFT_CORNER = new Sprite(Spritesheet.CAVE_TILES, 2, 0, 16, 16, 3);
+	public static Sprite CAVE_WALL = new Sprite(Spritesheet.CAVE_TILES, 3, 0, 16, 16, 0);
+	
 	public static Sprite[] WATER = { new Sprite(Spritesheet.WORLD_TILES, 1, 0, 16, 16, 0),
 			new Sprite(Spritesheet.WORLD_TILES, 1, 1, 16, 16, 0), new Sprite(Spritesheet.WORLD_TILES, 1, 2, 16, 16, 0)
 
@@ -96,6 +111,9 @@ public class Sprite {
 
 	public int getFlip() {
 		return flip;
+	}
+	public void setFlip(int flip) {
+		this.flip = flip;
 	}
 
 	public static Sprite[] toArray(Spritesheet sheet, int width, int height) {

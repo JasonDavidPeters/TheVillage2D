@@ -45,11 +45,11 @@ public class EquipmentHandler {
 		case 0:
 			return 10;
 		case 1:
-			return 55;
+			return 45;
 		case 2: 
-			return 150;
+			return 75;
 		case 3:
-			return 55;
+			return 45;
 		}
 		return 0;
 	}

@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 public class Spritesheet {
 	
 	public static Spritesheet WORLD_TILES = new Spritesheet("/spritesheets/tiles/worldtileset.png");
+	public static Spritesheet CAVE_TILES = new Spritesheet("/spritesheets/tiles/cavetileset.png");
 	public static Spritesheet PLAYERSHEET = new Spritesheet("/spritesheets/player/playersheet.png");
 	public static Spritesheet UIBUTTONS = new Spritesheet("/spritesheets/ui/uibuttons.png");
 	public static Spritesheet ORES = new Spritesheet("/spritesheets/gameobjects/ores.png");

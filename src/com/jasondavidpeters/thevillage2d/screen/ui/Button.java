@@ -10,6 +10,7 @@ public class Button extends Component {
 	protected String btnText;
 	protected Mouse mouse;
 	protected Player player;
+	protected boolean toggle;
 
 	// ADD SPRITE TO BUTTONS, OR ALL COMPONENTS FOR THAT MATTER
 	public Button(String btnText, int x, int y, int width, int height) {

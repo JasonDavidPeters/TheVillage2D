@@ -1,5 +1,10 @@
 package com.jasondavidpeters.thevillage2d.world.entities.npc;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Random;
+
 import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Animation;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
@@ -7,6 +12,8 @@ import com.jasondavidpeters.thevillage2d.assets.Spritesheet;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.screen.ui.Panel;
+import com.jasondavidpeters.thevillage2d.world.entities.ground.GroundEntity;
 import com.jasondavidpeters.thevillage2d.world.gameitems.GameItem;
 import com.jasondavidpeters.thevillage2d.world.gameitems.StonePickaxe;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
@@ -23,17 +30,30 @@ public class Player extends Npc {
 	private boolean inventoryOpen;
 
 	protected Animation animation;
+	protected Animation[] mining = { new Animation(Spritesheet.PLAYERSHEET.subsheet(4 * 16, 0, 16, 4 * 16), 16, 16),
+			new Animation(Spritesheet.PLAYERSHEET.subsheet(4 * 16, 0, 16, 4 * 16), 16, 16),
+			new Animation(Spritesheet.PLAYERSHEET.subsheet(4 * 16, 0, 16, 4 * 16), 16, 16),
+			new Animation(Spritesheet.PLAYERSHEET.subsheet(4 * 16, 0, 16, 4 * 16), 16, 16) };
+	private boolean settingsOpen;
+	private boolean equipmentOpen;
+	private Map<Integer, Integer> inventory;
+	private final int maxInventorySlots = 12;
+	private boolean isMining;
+	private boolean setPickaxePosition;
+	protected Random random = new Random();
+	private boolean inventoryFull;
 
 	public Player(String name, int x, int y, Mouse mouse) {
-		super(name, x, y);
+		super(name, x * 16, y * 16);
 		this.mouse = mouse;
 		animation = new Animation(Spritesheet.ORES.subsheet(0, 0, 4 * 16, 16), 16, 16);
 		sprite = Sprite.PLAYER_FORWARD[0];
 		width = 9;
 		height = 15;
 		speed = .8;
+		inventory = new HashMap<Integer, Integer>();
+		equipment[0] = new StonePickaxe(equipmentHandler, Sprite.STONE_PICKAXE);
 		initaliseUI();
-		equipment[0] = new StonePickaxe(equipmentHandler,Sprite.STONE_PICKAXE);
 	}
 
 	private void initaliseUI() {
@@ -44,16 +64,24 @@ public class Player extends Npc {
 		super.render(renderer);
 		renderer.setOffsets((int) x - Renderer.WIDTH / 2, (int) y - Renderer.HEIGHT / 2);
 		renderer.renderPlayer((int) x, (int) y, this);
-		if (inventoryOpen)
+		if (inventoryOpen) {
+			/*
+			 * Render the inventory do we make image components?
+			 */
 			Game.UIMANAGER.getComponent("inventory_panel").setToRender(true);
-		else
+		} else {
 			Game.UIMANAGER.getComponent("inventory_panel").setToRender(false);
+		}
+		if (equipmentOpen)
+			Game.UIMANAGER.getComponent("equipment_panel").setToRender(true);
+		else
+			Game.UIMANAGER.getComponent("equipment_panel").setToRender(false);
 		// render inventory
-		
-		if (equipment != null && equipment.length >0) {
-			for (GameItem gItem: equipment)
-				if (gItem!=null)
-			gItem.render(this,renderer);
+
+		if (equipment != null && equipment.length > 0) {
+			for (GameItem gItem : equipment)
+				if (gItem != null)
+					gItem.render(this, renderer);
 		}
 	}
 
@@ -84,6 +112,28 @@ public class Player extends Npc {
 		}
 		playerMovement();
 
+		// if the player is within radius of GroundEntity.GROUNDENTITIES then add it to
+		// player inventory
+		// and remove it from GroundEntity.GROUNDENTITIES
+		if (!inventoryFull()) {
+			for (GroundEntity groundEntity : GroundEntity.GROUNDENTITIES) {
+				if (getDistanceFromPlayer(groundEntity.getX(), groundEntity.getY(), x, y) <= 8) {
+					/*
+					 * TODO: if inventory has empty slots addToInventory(GAMEITEM X) { - add to
+					 * hashmap - add to panel - same for remove, both must be done at the same time
+					 * each time. }
+					 * 
+					 */
+					inventory.put(getNextEmptyInventorySlot(), groundEntity.getItemID());
+					((Panel) Game.UIMANAGER.getComponent("inventory_panel")).add(groundEntity.getSprite());
+					groundEntity.setRemove(true);
+					/*
+					 * item picking up
+					 */
+				}
+			}
+		}
+
 		/*
 		 * TODO: Check clicking compared to gameobjects should I change gameobject list
 		 * dynamically to only what we are rendering?
@@ -106,10 +156,29 @@ public class Player extends Npc {
 					if (!gameObject.canInteractFromFar()) {
 						double radius = ((gameObject.getSprite().getWidth()));
 						if (getDistanceFromPlayer(gameObject.getX(), gameObject.getY(), x, y) <= radius) {
+							isMining = true;
 							gameObject.interact(this);
-							//animation.start();
-							//if (animation.animSprite()!=null)
-							//sprite = animation.animSprite();
+							mining[dir].start();
+							if (mining[dir].animSprite() != null) {
+								sprite = mining[dir].animSprite();
+								if (dir == 1)
+									sprite.setFlip(1);
+								if (isMining) {
+									if (!setPickaxePosition) {
+										equipment[0].updateY(equipment[0].getY() - 50);
+										setPickaxePosition = true;
+//										System.out.println(true);
+									}
+//									System.out.println(isMining);
+									equipment[0].updateY((equipment[0].getY()) + 1);
+									equipment[0].updateX((equipment[0].getX()) + random.nextGaussian());
+									if (equipment[0].getY() >= equipmentHandler.getYOffset(dir)) {
+										setPickaxePosition = false;
+									}
+								}
+							}
+
+							// animation.start();
 //							mouse.reset();
 						}
 					} else {
@@ -118,6 +187,13 @@ public class Player extends Npc {
 					}
 				}
 			}
+		}
+		if (!isMining) {
+			equipment[0].updateY(equipmentHandler.getYOffset(dir));
+			setPickaxePosition = false;
+		}
+		if (isMining) {
+			isMining = false;
 		}
 	}
 
@@ -164,8 +240,28 @@ public class Player extends Npc {
 		}
 	}
 
+	public int getNextEmptyInventorySlot() {
+		// slot, itemID
+		Iterator<Integer> it = inventory.values().iterator();
+		int count = 0;
+		while (it.hasNext()) {
+			System.out.println(it.next());
+			count++;
+		}
+
+		return count + 1;
+	}
+
 	public void setInventoryOpen(boolean inventoryOpen) {
 		this.inventoryOpen = inventoryOpen;
+	}
+
+	public void setEquipmentOpen(boolean equipmentOpen) {
+		this.equipmentOpen = equipmentOpen;
+	}
+
+	public void setSettingsOpen(boolean settingsOpen) {
+		this.settingsOpen = settingsOpen;
 	}
 
 	public Mouse getMouse() {
@@ -174,6 +270,19 @@ public class Player extends Npc {
 
 	public boolean getInventoryOpen() {
 		return inventoryOpen;
+	}
+
+	public boolean getEquipmentOpen() {
+		return equipmentOpen;
+	}
+
+	public boolean getSettingsOpen() {
+		return settingsOpen;
+	}
+	public boolean inventoryFull() {
+		if (inventory.values().size() >= maxInventorySlots) inventoryFull=true;
+		else inventoryFull=false;
+		return inventoryFull;
 	}
 
 }

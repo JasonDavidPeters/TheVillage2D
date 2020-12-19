@@ -71,11 +71,13 @@ public class Renderer extends Canvas {
 		}
 		for (int y = 0; y < sprite.getHeight(); y++) {
 			int yy = ya + y;
+			int ny = (-y+ sprite.getWidth()) - 1;
 			for (int x = 0; x < sprite.getWidth(); x++) {
 				int xx = xa + x;
+				int nx = (-x + sprite.getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
-				int col = sprite.getPixels()[(x) + (y) * sprite.getWidth()];
+				int col = sprite.getPixels()[((sprite.getFlip() == 1 || sprite.getFlip() == 3 ? nx : x)) + ((sprite.getFlip() == 2 || sprite.getFlip() == 3 ? ny : y)) * sprite.getWidth()];
 				if (col != alpha) {
 					pixels[xx + yy * WIDTH] = col;
 				}
@@ -132,11 +134,15 @@ public class Renderer extends Canvas {
 		ya -= yOffset;
 		for (int y = 0; y < tile.getSprite().getHeight(); y++) {
 			int yy = ya + y;
+			int ny = (-y+ tile.getSprite().getWidth()) - 1;
 			for (int x = 0; x < tile.getSprite().getWidth(); x++) {
 				int xx = x + xa;
+				int nx = (-x+ tile.getSprite().getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					continue;
-				pixels[xx + yy * WIDTH] = tile.getSprite().getPixels()[x + y * tile.getSprite().getWidth()];
+				int col = tile.getSprite().getPixels()[(tile.getSprite().getFlip() == 1 || tile.getSprite().getFlip() == 3 ? nx : x) + (tile.getSprite().getFlip() == 2 || tile.getSprite().getFlip() == 3 ? ny : y)* tile.getSprite().getWidth()];
+				if (col != alpha)
+				pixels[xx + yy * WIDTH] = col;
 			}
 		}
 	}
@@ -167,8 +173,8 @@ public class Renderer extends Canvas {
 				int nx = (-x + player.getSprite().getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
-				int col = player.getSprite().getPixels()[(player.getSprite().getFlip() != 1 ? x : nx)
-						+ (player.getSprite().getFlip() != 2 ? y : ny) * player.getSprite().getWidth()];
+				int col = player.getSprite().getPixels()[(player.getSprite().getFlip() == 1 || player.getSprite().getFlip() == 3? nx : x)
+						+ (player.getSprite().getFlip() == 2|| player.getSprite().getFlip() == 3 ? ny: y) * player.getSprite().getWidth()];
 				if (col != alpha)
 					pixels[xx + yy * WIDTH] = col;
 			}
@@ -233,7 +239,7 @@ public class Renderer extends Canvas {
 			int yy = y + yp;
 			for (int x = 0; x < gameObject.getSprite().getWidth(); x++) {
 				int xx = x + xp;
-				if (xx < 0 || xx > WIDTH || yy < 0 || yy >= HEIGHT)
+				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
 				int col = gameObject.getSprite().getPixels()[x + y * gameObject.getSprite().getWidth()];
 				if (col != alpha)

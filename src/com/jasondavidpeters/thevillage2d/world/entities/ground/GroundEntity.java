@@ -11,7 +11,6 @@ public class GroundEntity extends Entity {
 	
 	public static List<GroundEntity> GROUNDENTITIES = new ArrayList<GroundEntity>();
 
-	protected Sprite sprite;
 	protected int aliveTimer;
 	protected int aliveTime;
 	protected int ticks;
@@ -19,16 +18,19 @@ public class GroundEntity extends Entity {
 	protected double bounceHeight;
 	protected double groundLevel;
 	protected boolean goUp;
-	
-	public GroundEntity(double x, double y, int aliveTime, Sprite sprite) {
+	protected int itemID;
+
+	public GroundEntity(int itemID,double x, double y, int aliveTime, Sprite sprite) {
 		super(x,y);
+		this.itemID=itemID;
 		this.sprite=sprite;
 		this.aliveTime=aliveTime;
 		this.aliveTimer=aliveTime;
 		bounceHeight = y - 15;
 	}
-	public GroundEntity(double x, double y, int aliveTime, double groundLevel, int dir,Sprite sprite) {
+	public GroundEntity(int itemID,double x, double y, int aliveTime, double groundLevel, int dir,Sprite sprite) {
 		super(x,y);
+		this.itemID=itemID;
 		this.groundLevel = groundLevel;
 		this.dir=dir;
 		this.sprite=sprite;
@@ -38,6 +40,7 @@ public class GroundEntity extends Entity {
 	}
 	
 	public void tick() {
+		//TODO: account for collision with ground entities, reverse the direction
 		ticks++;
 		if (bounceHeight != groundLevel) {
 			if (y > bounceHeight && goUp) { 
@@ -66,5 +69,8 @@ public class GroundEntity extends Entity {
 	}
 	public boolean isPermanent() {
 		return false;
+	}
+	public int getItemID() {
+		return itemID;
 	}
 }

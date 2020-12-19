@@ -40,6 +40,15 @@ public class Entity {
 	public void init(Level level) {
 		this.level=level;
 	}
+	public void setX(double x) { 
+		this.x=x;
+	}
+	public void setY(double y) {
+		this.y=y;
+	}
+	public Level getLevel() {
+		return level;
+	}
 	public Sprite getSprite() {
 		return sprite;
 	}

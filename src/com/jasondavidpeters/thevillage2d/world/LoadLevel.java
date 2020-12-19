@@ -27,8 +27,12 @@ public class LoadLevel extends Level {
 			e.printStackTrace();
 		}
 		add(Tile.WATER);
-		add(GameObject.GAMEOBJECT_STONE);
-		add(GameObject.GAMEOBJECT_CAVEENTRANCE);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				add(tileToGameObject(x, y));
+			}
+		}
+//		add(GameObject.GAMEOBJECT_STONE);
 	}
 
 }

@@ -42,13 +42,24 @@ public class Animation {
 	public Sprite animSprite() {
 		return animSprite;
 	}
+	public Sprite nextFrame() {
+		if (frame == maxFrames) frame=0;
+		return animSprite=animations[frame++];
+	}
 
 	public void stop() {
+		frame=0;
+	}
+	
+	public void reset() {
 		frame=0;
 	}
 
 	public void cancel() {
 		loop = false;
+	}
+	public int getFrame() { 
+		return frame;
 	}
 
 }
