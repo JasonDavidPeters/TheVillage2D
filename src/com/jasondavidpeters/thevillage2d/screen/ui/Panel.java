@@ -33,6 +33,10 @@ public class Panel extends Component {
 	public void add(Sprite s) {
 		sprites.add(s);
 	}
+	public void clearSprites() {
+		if (sprites.size() <=0) return;
+		sprites.clear();
+	}
 
 	public void remove(Sprite s) {
 		sprites.remove(s);

@@ -1,7 +1,5 @@
 package com.jasondavidpeters.thevillage2d.world;
 
-import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
-
 public class RandomLevel extends Level {
 
 	public RandomLevel(int width, int height) {

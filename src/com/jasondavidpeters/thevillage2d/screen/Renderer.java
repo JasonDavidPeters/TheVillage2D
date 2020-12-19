@@ -13,6 +13,7 @@ import com.jasondavidpeters.thevillage2d.Game;
 import com.jasondavidpeters.thevillage2d.assets.Font;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.world.Level;
+import com.jasondavidpeters.thevillage2d.world.entities.npc.Npc;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
@@ -71,46 +72,48 @@ public class Renderer extends Canvas {
 		}
 		for (int y = 0; y < sprite.getHeight(); y++) {
 			int yy = ya + y;
-			int ny = (-y+ sprite.getWidth()) - 1;
+			int ny = (-y + sprite.getWidth()) - 1;
 			for (int x = 0; x < sprite.getWidth(); x++) {
 				int xx = xa + x;
 				int nx = (-x + sprite.getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
-				int col = sprite.getPixels()[((sprite.getFlip() == 1 || sprite.getFlip() == 3 ? nx : x)) + ((sprite.getFlip() == 2 || sprite.getFlip() == 3 ? ny : y)) * sprite.getWidth()];
+				int col = sprite.getPixels()[((sprite.getFlip() == 1 || sprite.getFlip() == 3 ? nx : x))
+						+ ((sprite.getFlip() == 2 || sprite.getFlip() == 3 ? ny : y)) * sprite.getWidth()];
 				if (col != alpha) {
 					pixels[xx + yy * WIDTH] = col;
 				}
 			}
 		}
 	}
-	
+
 	public void renderText(int xp, int yp, Sprite sprite, int colour, boolean fixed) {
 		if (!fixed) {
-			xp-=xOffset;
-			yp-=yOffset;
+			xp -= xOffset;
+			yp -= yOffset;
 		}
 		for (int y = 0; y < sprite.getHeight(); y++) {
 			int ya = y + yp;
 			for (int x = 0; x < sprite.getWidth(); x++) {
 				int xa = x + xp;
-				if (xa < 0 || xa >= WIDTH || ya < 0 || ya >= HEIGHT) break;
+				if (xa < 0 || xa >= WIDTH || ya < 0 || ya >= HEIGHT)
+					break;
 				int col = sprite.getPixels()[x + y * sprite.getWidth()];
 				if (col != alpha) {
 					sprite.setPixel((x) + (y) * sprite.getWidth(), colour);
-					pixels[xa+ya*WIDTH] = col;
+					pixels[xa + ya * WIDTH] = col;
 				}
 			}
 		}
 	}
-	
+
 	public void drawString(String text, int xp, int yp, int colour, boolean fixed) {
 		final int yPosition = yp;
 		final int xPosition = xp;
 		Sprite sprite;
-		for (int s = 0 ; s < text.length(); s++) {
-			yp=yPosition;
-			xp=xPosition;
+		for (int s = 0; s < text.length(); s++) {
+			yp = yPosition;
+			xp = xPosition;
 			char c = text.charAt(s);
 			int spacing = s * 6;
 			sprite = Font.GAME_FONT[Font.CHARACTERS.indexOf(c)];
@@ -118,9 +121,9 @@ public class Renderer extends Canvas {
 				yp += 3;
 			}
 			if (c == 'g') {
-				xp+=-1;
+				xp += -1;
 			}
-			renderText(xp+spacing,yp, sprite, colour, fixed);
+			renderText(xp + spacing, yp, sprite, colour, fixed);
 		}
 	}
 
@@ -134,15 +137,18 @@ public class Renderer extends Canvas {
 		ya -= yOffset;
 		for (int y = 0; y < tile.getSprite().getHeight(); y++) {
 			int yy = ya + y;
-			int ny = (-y+ tile.getSprite().getWidth()) - 1;
+			int ny = (-y + tile.getSprite().getWidth()) - 1;
 			for (int x = 0; x < tile.getSprite().getWidth(); x++) {
 				int xx = x + xa;
-				int nx = (-x+ tile.getSprite().getWidth()) - 1;
+				int nx = (-x + tile.getSprite().getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					continue;
-				int col = tile.getSprite().getPixels()[(tile.getSprite().getFlip() == 1 || tile.getSprite().getFlip() == 3 ? nx : x) + (tile.getSprite().getFlip() == 2 || tile.getSprite().getFlip() == 3 ? ny : y)* tile.getSprite().getWidth()];
+				int col = tile.getSprite()
+						.getPixels()[(tile.getSprite().getFlip() == 1 || tile.getSprite().getFlip() == 3 ? nx : x)
+								+ (tile.getSprite().getFlip() == 2 || tile.getSprite().getFlip() == 3 ? ny : y)
+										* tile.getSprite().getWidth()];
 				if (col != alpha)
-				pixels[xx + yy * WIDTH] = col;
+					pixels[xx + yy * WIDTH] = col;
 			}
 		}
 	}
@@ -173,8 +179,35 @@ public class Renderer extends Canvas {
 				int nx = (-x + player.getSprite().getWidth()) - 1;
 				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
 					break;
-				int col = player.getSprite().getPixels()[(player.getSprite().getFlip() == 1 || player.getSprite().getFlip() == 3? nx : x)
-						+ (player.getSprite().getFlip() == 2|| player.getSprite().getFlip() == 3 ? ny: y) * player.getSprite().getWidth()];
+				int col = player.getSprite()
+						.getPixels()[(player.getSprite().getFlip() == 1 || player.getSprite().getFlip() == 3 ? nx : x)
+								+ (player.getSprite().getFlip() == 2 || player.getSprite().getFlip() == 3 ? ny : y)
+										* player.getSprite().getWidth()];
+				if (col != alpha)
+					pixels[xx + yy * WIDTH] = col;
+			}
+		}
+
+	}
+
+	public void renderNpc(int xa, int ya, Npc npc, boolean fixed) {
+		if (!fixed) {
+			xa -= xOffset;
+			ya -= yOffset;
+		}
+		npc.setScreenPosition(xa, ya);
+		for (int y = 0; y < npc.getSprite().getHeight(); y++) {
+			int yy = y + ya;
+			int ny = (-y + npc.getSprite().getHeight()) - 1;
+			for (int x = 0; x < npc.getSprite().getWidth(); x++) {
+				int xx = x + xa;
+				int nx = (-x + npc.getSprite().getWidth()) - 1;
+				if (xx < 0 || xx >= WIDTH || yy < 0 || yy >= HEIGHT)
+					break;
+				int col = npc.getSprite()
+						.getPixels()[(npc.getSprite().getFlip() == 1 || npc.getSprite().getFlip() == 3 ? nx : x)
+								+ (npc.getSprite().getFlip() == 2 || npc.getSprite().getFlip() == 3 ? ny : y)
+										* npc.getSprite().getWidth()];
 				if (col != alpha)
 					pixels[xx + yy * WIDTH] = col;
 			}
@@ -234,7 +267,7 @@ public class Renderer extends Canvas {
 	public void renderGameObject(int xp, int yp, GameObject gameObject) {
 		yp -= yOffset;
 		xp -= xOffset;
-		gameObject.setScreenPosition(xp,yp);
+		gameObject.setScreenPosition(xp, yp);
 		for (int y = 0; y < gameObject.getSprite().getHeight(); y++) {
 			int yy = y + yp;
 			for (int x = 0; x < gameObject.getSprite().getWidth(); x++) {

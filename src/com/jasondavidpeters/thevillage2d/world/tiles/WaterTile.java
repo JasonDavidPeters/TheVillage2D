@@ -1,7 +1,5 @@
 package com.jasondavidpeters.thevillage2d.world.tiles;
 
-import java.util.Random;
-
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 
 public class WaterTile extends Tile {

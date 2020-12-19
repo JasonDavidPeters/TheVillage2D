@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jasondavidpeters.thevillage2d.assets.Font;
+import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.screen.ui.UIManager;
 import com.jasondavidpeters.thevillage2d.util.Debug;
 import com.jasondavidpeters.thevillage2d.world.Level;
-import com.jasondavidpeters.thevillage2d.world.LoadLevel;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
+import com.jasondavidpeters.thevillage2d.world.entities.npc.Shopkeeper;
 
 public class Game implements Runnable {
 
@@ -20,8 +21,6 @@ public class Game implements Runnable {
 	private int ticks;
 	private int frames;
 	private Renderer renderer;
-	private Level spawnLevel;
-	private Level caveLevel;
 	private Keyboard keyboard;
 	private Mouse mouse;
 	public static UIManager UIMANAGER = new UIManager();
@@ -38,8 +37,7 @@ public class Game implements Runnable {
 
 	public void tick() {
 		for (Level level : levels)
-			if (level.currentLevel())
-				level.tick();
+			level.tick();
 		UIMANAGER.tick(); // in case of buttons / interactive UI
 	}
 
@@ -62,7 +60,8 @@ public class Game implements Runnable {
 		renderer.addMouseListener(mouse);
 		Debug.r = renderer;
 		Level.SPAWN_LEVEL.setCurrentLevel(true);
-		Level.SPAWN_LEVEL.addPlayer(new Player("Jason", 17, 14, mouse));
+		Level.SPAWN_LEVEL.addPlayer(new Player(Level.SPAWN_LEVEL,"Jason", 17, 14, mouse));
+		Level.SPAWN_LEVEL.add(new Shopkeeper(Level.SPAWN_LEVEL,"Shopkeeper", 18, 15, Sprite.SHOPKEEPER));
 		levels.add(Level.SPAWN_LEVEL);
 		levels.add(Level.CAVE_LEVEL);
 		font = new Font();

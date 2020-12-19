@@ -3,6 +3,7 @@ package com.jasondavidpeters.thevillage2d.world.gameobjects;
 import com.jasondavidpeters.thevillage2d.assets.Animation;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.assets.Spritesheet;
+import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.entities.ground.CopperGroundEntity;
 import com.jasondavidpeters.thevillage2d.world.entities.ground.GroundEntity;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
@@ -11,8 +12,8 @@ public class Copper extends GameObject {
 
 	Animation animation = new Animation(Spritesheet.ORES.subsheet(0, 16, 4 * 16, 16), 16, 16);
 
-	public Copper(int x, int y, Sprite sprite) {
-		super(x, y, sprite);
+	public Copper(Level level, int x, int y, Sprite sprite) {
+		super(level, x, y, sprite);
 		life = 150;
 		respawnTime = 6; // seconds
 	}
@@ -54,7 +55,7 @@ public class Copper extends GameObject {
 			setRemoved(true);
 			respawnTimer = respawnTime;
 			GroundEntity.GROUNDENTITIES.add(
-					new CopperGroundEntity(1,x, y + (random.nextInt(10) - 10), 15, y, dir, Sprite.GROUND_COPPER_ENTITY));
+					new CopperGroundEntity(1,p.getLevel(),x, y + (random.nextInt(10) - 10), 15, y, dir, Sprite.GROUND_COPPER_ENTITY));
 		}
 	}
 

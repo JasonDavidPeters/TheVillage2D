@@ -13,6 +13,8 @@ import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
 import com.jasondavidpeters.thevillage2d.screen.ui.Panel;
+import com.jasondavidpeters.thevillage2d.world.Level;
+import com.jasondavidpeters.thevillage2d.world.entities.Entity;
 import com.jasondavidpeters.thevillage2d.world.entities.ground.GroundEntity;
 import com.jasondavidpeters.thevillage2d.world.gameitems.GameItem;
 import com.jasondavidpeters.thevillage2d.world.gameitems.StonePickaxe;
@@ -43,8 +45,8 @@ public class Player extends Npc {
 	protected Random random = new Random();
 	private boolean inventoryFull;
 
-	public Player(String name, int x, int y, Mouse mouse) {
-		super(name, x * 16, y * 16);
+	public Player(Level level,String name, int x, int y, Mouse mouse) {
+		super(level,name, x * 16, y * 16);
 		this.mouse = mouse;
 		animation = new Animation(Spritesheet.ORES.subsheet(0, 0, 4 * 16, 16), 16, 16);
 		sprite = Sprite.PLAYER_FORWARD[0];
@@ -134,13 +136,45 @@ public class Player extends Npc {
 			}
 		}
 
+		gameObjectInteraction();
+		npcInteraction();
 		/*
 		 * TODO: Check clicking compared to gameobjects should I change gameobject list
 		 * dynamically to only what we are rendering?
 		 */
+	}
+
+	private void npcInteraction() {
 		if (mouse.getMouseB() == 1 && mouse.getMouseX() >= 0 && mouse.getMouseX() <= Renderer.WIDTH
 				&& mouse.getMouseY() >= 0 && mouse.getMouseY() <= Renderer.HEIGHT) {
-			for (GameObject gameObject : level.gameObjects) {
+			for (Entity e : level.getEntities()) {
+				if (!(e instanceof Npc))
+					return;
+				Npc n = (Npc) e;
+
+				int mouseXo = mouse.getMouseX();
+				int mouseYo = mouse.getMouseY();
+				if ((mouseXo >= n.getScreenXPosition()
+						&& mouseXo <= n.getScreenXPosition() + n.getSprite().getWidth() / 2)
+						&& (mouseYo >= n.getScreenYPosition() - n.getSprite().getHeight() / 2
+								&& mouseYo <= n.getScreenYPosition() + n.getSprite().getHeight() / 2)) {
+					if (!n.canInteractFromAfar()) {
+						double radius = ((n.getSprite().getWidth()));
+						if (getDistanceFromPlayer(n.getX(), n.getY(), x, y) <= radius) {
+							n.interact(this);
+						}
+					} else {
+						n.interact(this);
+					}
+				}
+			}
+		}
+	}
+
+	private void gameObjectInteraction() {
+		if (mouse.getMouseB() == 1 && mouse.getMouseX() >= 0 && mouse.getMouseX() <= Renderer.WIDTH
+				&& mouse.getMouseY() >= 0 && mouse.getMouseY() <= Renderer.HEIGHT) {
+			for (GameObject gameObject : level.getGameObjects()) {
 //				Debug.drawRect(gameObject.getX(), gameObject.getY(), gameObject.getSprite().getWidth(),
 //						gameObject.getSprite().getHeight());
 
@@ -152,7 +186,7 @@ public class Player extends Npc {
 						&& mouseXo <= gameObject.getScreenPositionX() + gameObject.getSprite().getWidth() / 2)
 						&& (mouseYo >= gameObject.getScreenPositionY() && mouseYo <= gameObject.getScreenPositionY()
 								+ gameObject.getSprite().getHeight() / 2)) {
-//					System.out.println();
+
 					if (!gameObject.canInteractFromFar()) {
 						double radius = ((gameObject.getSprite().getWidth()));
 						if (getDistanceFromPlayer(gameObject.getX(), gameObject.getY(), x, y) <= radius) {
@@ -239,6 +273,12 @@ public class Player extends Npc {
 			break;
 		}
 	}
+	
+	public void emptyInventory() { 
+		if (inventory.values().size() > 0)
+		inventory.clear();
+		((Panel) Game.UIMANAGER.getComponent("inventory_panel")).clearSprites();
+	}
 
 	public int getNextEmptyInventorySlot() {
 		// slot, itemID
@@ -279,9 +319,12 @@ public class Player extends Npc {
 	public boolean getSettingsOpen() {
 		return settingsOpen;
 	}
+
 	public boolean inventoryFull() {
-		if (inventory.values().size() >= maxInventorySlots) inventoryFull=true;
-		else inventoryFull=false;
+		if (inventory.values().size() >= maxInventorySlots)
+			inventoryFull = true;
+		else
+			inventoryFull = false;
 		return inventoryFull;
 	}
 

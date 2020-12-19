@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.entities.Entity;
 import com.jasondavidpeters.thevillage2d.world.entities.handlers.EquipmentHandler;
 import com.jasondavidpeters.thevillage2d.world.gameitems.GameItem;
@@ -19,34 +20,24 @@ public class Npc extends Entity {
 	protected GameItem equipment[] = new GameItem[3];
 	protected EquipmentHandler equipmentHandler = new EquipmentHandler();
 
-	public Npc(String name, int x, int y, Sprite sprite) {
-		super(x, y);
+	public Npc(Level level,String name, int x, int y, Sprite sprite) {
+		super(level, x, y);
 		this.sprite = sprite;
 		this.name = name;
 	}
 
-	public Npc(String name, int x, int y) {
-		super(x, y);
+	public Npc(Level level, String name, int x, int y) {
+		super(level, x, y);
 		this.name = name;
+	}
+	
+	public void interact(Player p) {
+		
 	}
 
 	public void render(Renderer r) {
-		r.drawString(name, (int) x - 5, (int) y - 12, 0xFF0000, false);
-	}
-
-	protected boolean tileCollision(double xp, double yp, double xa, double ya, int npcWidth, int npcHeight) {
-		for (int c = 0; c < 4; c++) {
-			double xx = ((xp + xa) - c % 2 + npcWidth) / 16; // when c is 3 and 4
-			double yy = ((yp + ya) - c / 2 + npcHeight) / 16;
-			if (c == 0) {
-				xx = Math.floor(xx);
-				yy = Math.floor(yy);
-			}
-//			System.out.println(xx + " " + yy + " " + level.getTile((int) xx, (int) yy) + " " + c);
-			if (level.getTile((int) xx, (int) yy).isSolid())
-				return true;
-		}
-		return false;
+		r.renderNpc((int)x, (int)y, this, false);
+//		r.drawString(name, (int) x - 5, (int) y - 12, 0xFF0000, false);
 	}
 
 	public double abs(double n) {
@@ -64,7 +55,7 @@ public class Npc extends Entity {
 		 * + width /2 && middle + height/2 is equal to the desired position then the
 		 * player is colliding
 		 */
-		ArrayList<GameObject> gameObjects = (ArrayList<GameObject>) level.gameObjects;
+		ArrayList<GameObject> gameObjects = (ArrayList<GameObject>) level.getGameObjects();
 
 		// find multiples of 16 (tile size) and multiply by half
 		for (GameObject o : gameObjects) {
@@ -110,9 +101,6 @@ public class Npc extends Entity {
 				for (GameItem gItem : equipment)
 					if (gItem != null)
 						gItem.updatePosition((x/16), y / 16);
-			/*
-			 * TODO: fix speed of game items compared to the entity they're tied to
-			 */
 		} else {
 			xa = 0;
 			ya = 0;
@@ -133,6 +121,9 @@ public class Npc extends Entity {
 
 	public double getSpeed() {
 		return speed;
+	}
+	public boolean canInteractFromAfar() {
+		return false;
 	}
 
 }

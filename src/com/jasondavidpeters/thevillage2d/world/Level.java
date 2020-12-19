@@ -1,8 +1,12 @@
 package com.jasondavidpeters.thevillage2d.world;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
@@ -21,13 +25,13 @@ public class Level {
 	protected int[] pixels;
 	protected int width, height;
 
-	public static Level SPAWN_LEVEL = new LoadLevel("/levels/spawn.png");
-	public static Level CAVE_LEVEL = new LoadLevel("/levels/cave.png");
+	public static Level SPAWN_LEVEL = new Spawn("/levels/spawn.png");
+	public static Level CAVE_LEVEL = new Cave("/levels/cave.png");
 
-	public List<Tile> tileList = new ArrayList<Tile>();
-	public List<Entity> entities = new ArrayList<Entity>();
-	public List<GroundEntity> groundEntities = new ArrayList<GroundEntity>();
-	public List<GameObject> gameObjects = new ArrayList<GameObject>();
+	protected List<Tile> tileList = new ArrayList<Tile>();
+	protected List<Entity> entities = new ArrayList<Entity>();
+	protected List<GroundEntity> groundEntities = new ArrayList<GroundEntity>();
+	protected List<GameObject> gameObjects = new ArrayList<GameObject>();
 
 	private boolean currentLevel;
 
@@ -43,6 +47,24 @@ public class Level {
 
 	public Level(String levelFile) {
 		this.levelFile = levelFile;
+		loadLevel();
+	}
+
+	private void loadLevel() {
+		try {
+			BufferedImage level = ImageIO.read(LoadLevel.class.getResource(levelFile));
+			width = level.getWidth();
+			height = level.getHeight();
+			pixels = level.getRGB(0, 0, width, height, pixels, 0, width);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//			add(Tile.WATER);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				add(tileToGameObject(x, y));
+			}
+		}
 	}
 
 	public void addPlayer(Player player) {
@@ -52,6 +74,7 @@ public class Level {
 			add(player);
 		}
 	}
+
 	public void removePlayer(Player player) {
 		if (this.player.equals(player)) {
 			entities.remove(player);
@@ -76,21 +99,11 @@ public class Level {
 				 */
 			}
 		}
-		if (GameObject.RESPAWN_OBJECTS.size() > 0) {
-			for (int i = 0; i < GameObject.RESPAWN_OBJECTS.size(); i++) {
-				// if the respawn timer is <= 0 then add it back to the gameobjects list
-				if (GameObject.RESPAWN_OBJECTS.get(i).getRespawnTimer() <= 0) {
-					GameObject.RESPAWN_OBJECTS.get(i).setRemoved(false);
-					gameObjects.add(GameObject.RESPAWN_OBJECTS.get(i));
-					GameObject.RESPAWN_OBJECTS.remove(i);
-				}
-			}
-		}
 		for (int i = 0; i < gameObjects.size(); i++) {
 			if (gameObjects.get(i).isRemoved()) {
 				GameObject.RESPAWN_OBJECTS.add(gameObjects.get(i));
 				gameObjects.remove(i);
-				continue;
+				break;
 			}
 			gameObjects.get(i).render(renderer);
 		}
@@ -108,29 +121,9 @@ public class Level {
 	}
 
 	public void tick() {
-		for (int i = 0; i < entities.size(); i++)
-			entities.get(i).tick();
-		for (int i = 0; i < tileList.size(); i++)
-			tileList.get(i).tick();
-		for (int i = 0; i < gameObjects.size(); i++)
-			gameObjects.get(i).tick();
-		if (GameObject.RESPAWN_OBJECTS.size() > 0)
-			for (int i = 0; i < GameObject.RESPAWN_OBJECTS.size(); i++)
-				GameObject.RESPAWN_OBJECTS.get(i).tick();
-
-		for (int i = 0; i < GroundEntity.GROUNDENTITIES.size(); i++)
-			GroundEntity.GROUNDENTITIES.get(i).tick();
 	}
 
-	protected void add(Object object) {
-		if (object instanceof Tile)
-			tileList.add((Tile) object);
-		if (object instanceof GroundEntity)
-			groundEntities.add((GroundEntity) object);
-		if (object instanceof Entity)
-			entities.add((Entity) object);
-		if (object instanceof GameObject)
-			gameObjects.add((GameObject) object);
+	public void add(Object object) {
 	}
 
 	// 2D110E - cave walls sides
@@ -163,36 +156,39 @@ public class Level {
 			return Tile.DIRT_PAVEMENT;
 		if (pixels[x + y * width] == 0xFF87380A)
 			return Tile.WOODEN_PLANK;
-		
-		
+
 		// GAMEOBJECTS
 		{
 			if (pixels[x + y * width] == 0xFF631A16) // game object tile, make the tile adjacent so it blends in
-				return getTile(x-1,y);
+				return getTile(x - 1, y);
 			if (pixels[x + y * width] == 0xFF4C3636)
-				return getTile(x+1,y);
-			if (pixels[x + y * width] == 0xFF493434) 
-				return getTile(x+1,y);
-			if (pixels[x + y * width] == 0xFF473232) 
-				return getTile(x+1,y);
+				return getTile(x + 1, y);
+			if (pixels[x + y * width] == 0xFF493434)
+				return getTile(x + 1, y);
+			if (pixels[x + y * width] == 0xFF473232)
+				return getTile(x + 1, y);
 		}
 		return Tile.VOID;
 	}
 
-	//4C3636 - stone ore
-	//493434 - copper ore
+	// 4C3636 - stone ore
+	// 493434 - copper ore
 	// 473232 - tin ore
-	// 
+	//
 	public GameObject tileToGameObject(int x, int y) {
-		if (pixels[x + y * width] == 0xFF631A16) 
-			return new CaveEntrance(x, y, Sprite.CAVEENTRANCE);
-		if (pixels[x + y * width] == 0xFF4C3636) 
-			return new Stone(x, y, Sprite.STONEORE);
-		if (pixels[x + y * width] == 0xFF493434) 
-			return new Copper(x, y, Sprite.COPPERORE);
-		if (pixels[x + y * width] == 0xFF473232) 
-			return new Tin(x, y, Sprite.TINORE); 
+		if (pixels[x + y * width] == 0xFF631A16)
+			return new CaveEntrance(this,x, y, Sprite.CAVEENTRANCE);
+		if (pixels[x + y * width] == 0xFF4C3636)
+			return new Stone(this,x, y, Sprite.STONEORE);
+		if (pixels[x + y * width] == 0xFF493434)
+			return new Copper(this,x, y, Sprite.COPPERORE);
+		if (pixels[x + y * width] == 0xFF473232)
+			return new Tin(this,x, y, Sprite.TINORE);
 		return null;
+	}
+
+	public ArrayList<GameObject> getGameObjects() {
+		return (ArrayList<GameObject>) gameObjects;
 	}
 
 	public boolean currentLevel() {
@@ -200,7 +196,7 @@ public class Level {
 	}
 
 	public void setCurrentLevel(boolean currentLevel) {
-		
+
 		this.currentLevel = currentLevel;
 	}
 
@@ -222,5 +218,9 @@ public class Level {
 				return o;
 		}
 		return null;
+	}
+
+	public List<Entity> getEntities() {
+		return entities;
 	}
 }

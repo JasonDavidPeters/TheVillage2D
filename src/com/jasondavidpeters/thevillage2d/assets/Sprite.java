@@ -42,7 +42,10 @@ public class Sprite {
 			new Sprite(Spritesheet.WORLD_TILES, 1, 1, 16, 16, 0), new Sprite(Spritesheet.WORLD_TILES, 1, 2, 16, 16, 0)
 
 	};
-
+	
+	//NPC
+	public static Sprite SHOPKEEPER = new Sprite(Spritesheet.SHOPKEEPERSHEET, 0, 0, 16, 16, 0);
+	
 	public static Sprite PLAYER_FORWARD[] = { new Sprite(Spritesheet.PLAYERSHEET, 0, 0, 16, 16, 0),
 			new Sprite(Spritesheet.PLAYERSHEET, 0, 1, 16, 16, 0),
 			new Sprite(Spritesheet.PLAYERSHEET, 0, 1, 16, 16, 1) };

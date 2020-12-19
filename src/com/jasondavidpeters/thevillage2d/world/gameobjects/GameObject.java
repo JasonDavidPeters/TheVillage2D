@@ -6,11 +6,10 @@ import java.util.Random;
 
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 
 public class GameObject {
-
-	public static GameObject GAMEOBJECT_STONE = new Stone(2, 2, Sprite.STONEORE);
 	
 	public static List<GameObject> RESPAWN_OBJECTS = new ArrayList<GameObject>(); // Objects that have been removed from level and are set to respawn
 
@@ -24,11 +23,13 @@ public class GameObject {
 	protected int respawnTime;
 	protected int ticks;
 	protected int dir; // direction from which the Entity is accessing the Game Object from
+	protected Level level;
 
-	public GameObject(int x, int y, Sprite sprite) {
+	public GameObject(Level level, int x, int y, Sprite sprite) {
 		this.x = x * 16;
 		this.y = y * 16;
 		this.sprite = sprite;
+		this.level=level;
 	}
 	
 	public void interact(Player p) {
@@ -88,5 +89,8 @@ public class GameObject {
 	}
 	public int getRespawnTime() {
 		return respawnTime;
+	}
+	public Level getLevel() {
+		return level;
 	}
 }
