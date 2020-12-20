@@ -33,7 +33,8 @@ public class UIManager {
 	public Component getComponent(String name) {
 //		System.out.println("looking for: " + name);
 		for (Component c : components) {
-			if (c.getComponentName() == null) continue;
+			if (c.getComponentName() == null)
+				continue;
 			if (c.getComponentName().equals(name))
 				return c;
 		}
@@ -53,9 +54,12 @@ public class UIManager {
 
 	public void drawInitialUI(Player p) {
 		Panel gamePanel = new Panel(Renderer.WIDTH - 41, 125, 40, Renderer.HEIGHT - 126, 0xFF0000);
-		Button inventoryButton = new InventoryButton("", 0*gamePanel.getWidth()/3, 0, gamePanel.getWidth()/3, 17, Sprite.INVENTORY_BUTTON, p);
-		Button equipmentButton = new EquipmentButton("", 1*gamePanel.getWidth()/3, 0, gamePanel.getWidth()/3, 17, Sprite.EQUIPMENT_BUTTON, p);
-		Button settingsButton = new SettingsButton("", (2*gamePanel.getWidth()/3)+1, 0, gamePanel.getWidth()/3, 17, Sprite.SETTINGS_BUTTON, p);
+		Button inventoryButton = new InventoryButton("", 0 * gamePanel.getWidth() / 3, 0, gamePanel.getWidth() / 3, 17,
+				Sprite.INVENTORY_BUTTON, p);
+		Button equipmentButton = new EquipmentButton("", 1 * gamePanel.getWidth() / 3, 0, gamePanel.getWidth() / 3, 17,
+				Sprite.EQUIPMENT_BUTTON, p);
+		Button settingsButton = new SettingsButton("", (2 * gamePanel.getWidth() / 3) + 1, 0, gamePanel.getWidth() / 3,
+				17, Sprite.SETTINGS_BUTTON, p);
 		gamePanel.setToRender(true);
 		inventoryButton.setToRender(true);
 		equipmentButton.setToRender(true);
@@ -64,18 +68,25 @@ public class UIManager {
 		gamePanel.add(inventoryButton);
 		gamePanel.add(settingsButton);
 		add(gamePanel);
-		
+
 		/*
-		 * Drawing inventory and equipment panels 
+		 * Drawing inventory and equipment panels
 		 */
-		Panel inventory = new Panel(Renderer.WIDTH - 61, 75, 60, 50, 0xFF0000);
+		Panel inventory = new InventoryPanel(Renderer.WIDTH - 59, 75, 60, 50, Sprite.INVENTORY_PANEL);
 		inventory.setComponentName("inventory_panel");
 		add(inventory);
 		/*
-		 * TODO: draw equipment sprite, set the equipment slot to sprite of worn equipment in player array
+		 * TODO: draw equipment sprite, set the equipment slot to sprite of worn
+		 * equipment in player array
 		 */
-		Panel equipment= new Panel(Renderer.WIDTH - 61, 75, 60, 50, 0xffaeff);
+		Panel equipment = new Panel(Renderer.WIDTH - 61, 75, 60, 50, 0xffaeff);
 		equipment.setComponentName("equipment_panel");
 		add(equipment);
+
+		Panel shop = new Panel(20, 20, 60, 50, Sprite.SHOP_PANEL);
+		Button closeButton = new CloseButton("", shop.getWidth()-2, 0, 7, 7, Sprite.CLOSE_BUTTON, p);
+		shop.add(closeButton);
+		shop.setComponentName("shop_panel");
+		add(shop);
 	}
 }

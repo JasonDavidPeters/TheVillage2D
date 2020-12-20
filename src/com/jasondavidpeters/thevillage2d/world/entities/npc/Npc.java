@@ -19,6 +19,7 @@ public class Npc extends Entity {
 	protected double speed;
 	protected GameItem equipment[] = new GameItem[3];
 	protected EquipmentHandler equipmentHandler = new EquipmentHandler();
+	protected boolean canMove = true;
 
 	public Npc(Level level,String name, int x, int y, Sprite sprite) {
 		super(level, x, y);
@@ -105,6 +106,13 @@ public class Npc extends Entity {
 			xa = 0;
 			ya = 0;
 		}
+	}
+	
+	public boolean canMove() {
+		return canMove;
+	}
+	public void setCanMove(boolean canMove) {
+		this.canMove=canMove;
 	}
 	
 	public int getDir() {

@@ -15,6 +15,7 @@ import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Npc;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
+import com.jasondavidpeters.thevillage2d.world.gameitems.GameItem;
 import com.jasondavidpeters.thevillage2d.world.gameobjects.GameObject;
 import com.jasondavidpeters.thevillage2d.world.tiles.Tile;
 
@@ -85,6 +86,25 @@ public class Renderer extends Canvas {
 				}
 			}
 		}
+	}
+	public void renderGameItem(int xp, int yp, GameItem gameItem, boolean fixed) {
+		if (fixed) {
+			xp-=xOffset;
+			yp-=yOffset;
+		}
+		gameItem.setScreenPosition(xp, yp);
+		for (int y = 0; y < gameItem.getSprite().getHeight(); y++) {
+			int ya = y + yp;
+			for (int x = 0; x < gameItem.getSprite().getWidth(); x++) {
+				int xa= x + xp;
+				
+				if (xa < 0 || xa >=WIDTH || ya < 0 || ya >= HEIGHT) continue;
+				int col = gameItem.getSprite().getPixels()[x + y * gameItem.getSprite().getWidth()];
+				if (col != alpha)
+					pixels[xa+ya*WIDTH] = col;
+			}
+		}
+		
 	}
 
 	public void renderText(int xp, int yp, Sprite sprite, int colour, boolean fixed) {
@@ -324,5 +344,6 @@ public class Renderer extends Canvas {
 	public JFrame getFrame() {
 		return frame;
 	}
+
 
 }

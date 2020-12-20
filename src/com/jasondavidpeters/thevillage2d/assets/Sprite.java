@@ -1,5 +1,10 @@
 package com.jasondavidpeters.thevillage2d.assets;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 public class Sprite {
 	/*
 	 * If its an animated sprite then it needs to cycle.
@@ -11,7 +16,9 @@ public class Sprite {
 	public static Sprite INVENTORY_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 0, 0, 16, 16, 0);
 	public static Sprite EQUIPMENT_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 1, 0, 16, 16, 0);
 	public static Sprite SETTINGS_BUTTON = new Sprite(Spritesheet.UIBUTTONS, 2, 0, 16, 16, 0);
-
+	public static Sprite INVENTORY_PANEL = new Sprite("/spritesheets/ui/inventorypanel.png", 60, 50, 0);
+	public static Sprite SHOP_PANEL = new Sprite("/spritesheets/ui/shoppanel.png", 60, 50, 0);
+	public static Sprite CLOSE_BUTTON = new Sprite("/spritesheets/ui/closebutton.png", 7, 7, 0);
 	// Entities
 	public static Sprite GROUND_STONE_ENTITY = new Sprite(Spritesheet.ORES, 6, 0, 16, 16, 0);
 	public static Sprite GROUND_COPPER_ENTITY = new Sprite(Spritesheet.ORES, 6, 1, 16, 16, 0);
@@ -76,6 +83,11 @@ public class Sprite {
 			pixels[i] = p[i];
 		}
 	}
+	
+	public Sprite(String url, int width, int height, int flip) {
+		this.flip = flip;
+		loadStandalone(url);
+	}
 
 	public Sprite(Spritesheet sheet, int x, int y, int width, int height, int flip) {
 		this.sheet = sheet;
@@ -86,6 +98,18 @@ public class Sprite {
 		this.flip = flip;
 		pixels = new int[width * height];
 		load();
+	}
+	
+	private void loadStandalone(String url) {
+		try {
+			BufferedImage spriteImage = ImageIO.read(Sprite.class.getResource(url));
+			int w = width =  spriteImage.getWidth();
+			int h = height = spriteImage.getHeight();
+			pixels = new int[w* h];
+			spriteImage.getRGB(0, 0, w, h, pixels, 0, w);
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
 	}
 
 	private void load() {

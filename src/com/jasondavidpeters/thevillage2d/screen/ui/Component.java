@@ -27,6 +27,13 @@ public class Component {
 		this.height=height;
 		this.color=color;
 	}
+	public Component(int x, int y, int width, int height, Sprite sprite) {
+		this.x=x;
+		this.y=y;
+		this.width=width;
+		this.height=height;
+		this.sprite=sprite;
+	}
 	
 	public void render(Renderer renderer) {
 		

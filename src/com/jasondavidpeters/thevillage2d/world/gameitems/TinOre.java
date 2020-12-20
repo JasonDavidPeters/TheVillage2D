@@ -3,17 +3,17 @@ package com.jasondavidpeters.thevillage2d.world.gameitems;
 import com.jasondavidpeters.thevillage2d.assets.Sprite;
 import com.jasondavidpeters.thevillage2d.world.entities.npc.Player;
 
-public class StoneOre extends GameItem {
+public class TinOre extends GameItem {
 	
-	public StoneOre(Player p) {
+	public TinOre(Player p) {
 		super(p);
-		sprite=Sprite.GROUND_STONE_ENTITY;
+		sprite=Sprite.GROUND_TIN_ENTITY;
 	}
 
-	public StoneOre(double x, double y, Sprite sprite) {
+	public TinOre(double x, double y, Sprite sprite) {
 		super(x,y,sprite);
 	}
-	public StoneOre(Sprite sprite) {
+	public TinOre(Sprite sprite) {
 		super(sprite);
 	}
 }

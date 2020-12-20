@@ -1,7 +1,6 @@
 package com.jasondavidpeters.thevillage2d.world.entities.npc;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -12,6 +11,7 @@ import com.jasondavidpeters.thevillage2d.assets.Spritesheet;
 import com.jasondavidpeters.thevillage2d.input.Keyboard;
 import com.jasondavidpeters.thevillage2d.input.Mouse;
 import com.jasondavidpeters.thevillage2d.screen.Renderer;
+import com.jasondavidpeters.thevillage2d.screen.ui.InventoryPanel;
 import com.jasondavidpeters.thevillage2d.screen.ui.Panel;
 import com.jasondavidpeters.thevillage2d.world.Level;
 import com.jasondavidpeters.thevillage2d.world.entities.Entity;
@@ -38,23 +38,26 @@ public class Player extends Npc {
 			new Animation(Spritesheet.PLAYERSHEET.subsheet(4 * 16, 0, 16, 4 * 16), 16, 16) };
 	private boolean settingsOpen;
 	private boolean equipmentOpen;
-	private Map<Integer, Integer> inventory;
+	private Map<Integer, GameItem> inventory;
 	private final int maxInventorySlots = 12;
 	private boolean isMining;
 	private boolean setPickaxePosition;
 	protected Random random = new Random();
 	private boolean inventoryFull;
+	private boolean isInShop;
 
-	public Player(Level level,String name, int x, int y, Mouse mouse) {
-		super(level,name, x * 16, y * 16);
+	public Player(Level level, String name, int x, int y, Mouse mouse) {
+		super(level, name, x * 16, y * 16);
 		this.mouse = mouse;
 		animation = new Animation(Spritesheet.ORES.subsheet(0, 0, 4 * 16, 16), 16, 16);
 		sprite = Sprite.PLAYER_FORWARD[0];
 		width = 9;
 		height = 15;
 		speed = .8;
-		inventory = new HashMap<Integer, Integer>();
+		inventory = new HashMap<Integer, GameItem>();
 		equipment[0] = new StonePickaxe(equipmentHandler, Sprite.STONE_PICKAXE);
+		for (int i = 0; i < maxInventorySlots; i++)
+			inventory.put(i, null);
 		initaliseUI();
 	}
 
@@ -88,6 +91,13 @@ public class Player extends Npc {
 	}
 
 	public void tick() {
+		if (Game.UIMANAGER.getComponent("shop_panel").getToRender()) {
+			isInShop = true;
+			setCanMove(false);
+		} else {
+			isInShop = false;
+			setCanMove(true);
+		}
 		if (anim > 7000)
 			anim = 0;
 		anim++;
@@ -103,14 +113,16 @@ public class Player extends Npc {
 			xa = 1 * speed;
 //		System.out.println(xa);
 //		System.out.println(mouse);
-		if (xa < 0 || xa > 0 || ya < 0 || ya > 0) {
-			walking = true;
-			if (xa < 0 || xa > 0)
-				move(xa, 0);
-			if (ya < 0 || ya > 0)
-				move(0, ya);
-		} else {
-			walking = false;
+		if (canMove()) {
+			if (xa < 0 || xa > 0 || ya < 0 || ya > 0) {
+				walking = true;
+				if (xa < 0 || xa > 0)
+					move(xa, 0);
+				if (ya < 0 || ya > 0)
+					move(0, ya);
+			} else {
+				walking = false;
+			}
 		}
 		playerMovement();
 
@@ -119,15 +131,12 @@ public class Player extends Npc {
 		// and remove it from GroundEntity.GROUNDENTITIES
 		if (!inventoryFull()) {
 			for (GroundEntity groundEntity : GroundEntity.GROUNDENTITIES) {
+
 				if (getDistanceFromPlayer(groundEntity.getX(), groundEntity.getY(), x, y) <= 8) {
-					/*
-					 * TODO: if inventory has empty slots addToInventory(GAMEITEM X) { - add to
-					 * hashmap - add to panel - same for remove, both must be done at the same time
-					 * each time. }
-					 * 
-					 */
-					inventory.put(getNextEmptyInventorySlot(), groundEntity.getItemID());
-					((Panel) Game.UIMANAGER.getComponent("inventory_panel")).add(groundEntity.getSprite());
+					GameItem g = GameItem.getByID(this, groundEntity.getItemID());
+					inventory.put(getNextEmptyInventorySlot(), g);
+					((InventoryPanel) Game.UIMANAGER.getComponent("inventory_panel"))
+							.add(g);
 					groundEntity.setRemove(true);
 					/*
 					 * item picking up
@@ -273,21 +282,30 @@ public class Player extends Npc {
 			break;
 		}
 	}
-	
-	public void emptyInventory() { 
+
+	public void emptyInventory() {
 		if (inventory.values().size() > 0)
-		inventory.clear();
+			inventory.clear();
 		((Panel) Game.UIMANAGER.getComponent("inventory_panel")).clearSprites();
 	}
 
 	public int getNextEmptyInventorySlot() {
 		// slot, itemID
-		Iterator<Integer> it = inventory.values().iterator();
 		int count = 0;
-		while (it.hasNext()) {
-			System.out.println(it.next());
+		for (int i = 0; i < maxInventorySlots; i++) {
+			GameItem g = inventory.get(i);
+			if (g == null) {
+//				System.out.println("null");
+				return count;
+			}
+			if (g.remove()) {
+//				System.out.println("isremove");
+				inventory.put(i, null);
+				return count;
+			}
 			count++;
 		}
+		System.out.println(count);
 
 		return count + 1;
 	}
@@ -321,11 +339,25 @@ public class Player extends Npc {
 	}
 
 	public boolean inventoryFull() {
-		if (inventory.values().size() >= maxInventorySlots)
+		int count = 0;
+		for (int i = 0; i < maxInventorySlots; i++) {
+			if (inventory.get(i) != null) {
+				if (((GameItem) inventory.get(i)).remove()) {
+					inventory.put(i, null);
+					break;
+				}
+				count++;
+			}
+		}
+		if (count >= maxInventorySlots)
 			inventoryFull = true;
 		else
 			inventoryFull = false;
 		return inventoryFull;
+	}
+
+	public boolean isInShop() {
+		return isInShop;
 	}
 
 }
